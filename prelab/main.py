@@ -31,6 +31,11 @@ except:
 
 if __name__ == '__main__':
     start=window()
-    #buyed=button()
-    #buyed.position(100,100)
+    start.buttons("bola1",100,100)
+    start.buttons("bola2",200,100)
+    start.buttons("bola3",300,100)
+    start.buttons("bola4",400,100)
+    start.refresh()
+    
+    
 #endregion Window
