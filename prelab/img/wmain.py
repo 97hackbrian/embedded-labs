@@ -1,4 +1,6 @@
 from tkinter import *
+import tkinter.font as tkFont
+
 #from tkinter import ttk
 
 class window:
@@ -8,10 +10,12 @@ class window:
         self.window.geometry("1200x700")
         self.window.title("main")
         self.window['bg'] = '#F133FF'
-        #buy=button(self.window,"lol").position(100,100)
-        
+
+
     def buttons(self,msg,posx,posy):
         button(self.window,msg).position(posx,posy)
+    def label(self,msg,posx,posy):
+        label().text(msg,self.window,posx,posy)
     def refresh(self):
         self.window.mainloop()
     def exitmain(self):
@@ -19,6 +23,24 @@ class window:
     
 class button:
     def __init__(self,win,tex):
-        self.buy=Button(win,text=tex)
+        self.B=Button(win,text=tex)
     def position(self,x1,y1):
-        self.buy.place(x=x1,y=y1)
+        self.B.place(x=x1,y=y1)
+
+class label:
+    def __init__(self):
+        self.Text = tkFont.Font(family="Comic Sans MS", size=12, weight="bold",slant="italic",font=("Segoe Script", 18,'bold'))
+    def text(self,msg,win,x1,y1):
+        self.Text=Label(win,text=msg)
+        self.Text.place(x=x1,y=y1)
+
+'''
+class product:
+    def __init__(self,obj,n,prize):
+        self.win=
+        self.n=n
+        self.prize=prize
+    def create(self):
+        for x in range(self.n):
+            self.win.bu(x,100*x,100)
+'''            
