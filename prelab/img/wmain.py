@@ -18,7 +18,7 @@ class window:
         self.label.config(font=self.labelf)
         
         
-        car = PhotoImage(file="prelab\img\carrito.png")
+        car = PhotoImage(file="prelab/img/carrito.png")
         car = car.zoom(25)
         car = car.subsample(150)
         boton = Button(image=car)
