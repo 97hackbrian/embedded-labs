@@ -46,10 +46,10 @@ if __name__ == '__main__':
     product2=products("Motor",25,root)
     product3=products("Rele",35,root)
     product4=products("Servo",80,root)
-    product1.show(400,300)
-    product2.show(400,450)
-    product3.show(400,600)
-    product4.show(400,750)
+    product1.show(250,150)
+    product2.show(250,250)
+    product3.show(250,350)
+    product4.show(250,450)
     start.refresh()
     
     

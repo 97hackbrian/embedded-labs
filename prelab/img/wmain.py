@@ -6,7 +6,7 @@ class window:
     
     def __init__(self,parent=None):
         self.window = parent
-        self.window.geometry("700x600")
+        self.window.geometry("800x600")
         self.window.title("main")
         self.window['bg'] = '#F6F4EB'    
           
@@ -18,13 +18,14 @@ class window:
         self.label.config(font=self.labelf)
         
         
-        car = PhotoImage(file="prelab/img/carrito.png")
+        car = PhotoImage(file="prelab\img\carrito.png")
         car = car.zoom(25)
         car = car.subsample(150)
-        boton = Button(image=car)
-        boton.place(x=580, y=480)
+        boton = Button(parent,image=car)
+        boton.place(x=680, y=20)
+        parent.update()
 
-        parent.mainloop()
+        
 
     def refresh(self):
         self.window.mainloop()
