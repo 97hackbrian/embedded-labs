@@ -12,8 +12,12 @@ class window:
         self.window['bg'] = '#F133FF'
 
 
-    def buttons(self,msg,posx,posy):
-        button(self.window,msg).position(posx,posy)
+    def buttons(self,msg,posx,posy,sum):
+        button(self.window,msg,sum).position(posx,posy)
+        return button(self.window,msg,sum)
+
+    
+    
     def label(self,msg,posx,posy):
         label().text(msg,self.window,posx,posy)
     def refresh(self):
@@ -22,8 +26,11 @@ class window:
         self.window.destroy()
     
 class button:
-    def __init__(self,win,tex):
-        self.B=Button(win,text=tex)
+    def __init__(self,win,tex,val1):
+        self.B=Button(win,text=tex,command=self.clicadd(val1))
+    def clicadd(self,val):
+        val=int(val)+1
+        return int(val)
     def position(self,x1,y1):
         self.B.place(x=x1,y=y1)
 

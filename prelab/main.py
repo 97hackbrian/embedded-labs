@@ -7,6 +7,7 @@ from img.wmain import *
 
 ###variables globales####
 deal=[0,0,0]
+deal = list(map(int, deal))
 
 
 #region Serial
@@ -36,14 +37,15 @@ class products:
         def __init__(self,n,d,p):
                self.name=n
                self.prize=p
-               self.sum=d
+               self.sum=int(d)
                print(self.prize)
         def show(self,obj,x,y):
               obj.label(self.name,x-120,y)
               obj.label(self.prize,x-40,y)
+              
+              obj.buttons("add",x+10,y,self.sum)
+              self.sum=obj.buttons("remove",x+120,y,self.sum)
               obj.label(self.sum,x+80,y)
-              obj.buttons("add",x,y)
-              obj.buttons("remove",x+120,y)
               
     
 #region Window
@@ -51,7 +53,7 @@ class products:
 
 if __name__ == '__main__':
     start=window()
-    product1=products("zapato",deal[0],130)
+    product1=products("zapato",int(deal[0]),130)
     product2=products("pantalon",deal[1],190)
     product3=products("camisa",deal[2],320)
     '''
@@ -63,7 +65,6 @@ if __name__ == '__main__':
     product1.show(start,400,300)
     product2.show(start,400,400)
     product3.show(start,400,500)
-
     ##products(start,3)
 
     start.refresh()
