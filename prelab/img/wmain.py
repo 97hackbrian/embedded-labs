@@ -32,8 +32,9 @@ class window:
         self.window.mainloop()
 
     def InitPopUp(self):
+        Rei=popup()
         Pop=popup()
-        Pop.refresh()
+        #Pop.refresh()
     
     def exitmain(self):
         self.window.destroy()

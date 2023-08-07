@@ -1,10 +1,40 @@
 from tkinter import *
 class popup:
+
+
+
+    instancia = None
+    window=None
     def __init__(self):
-        self.window=Tk()
-        self.window.geometry("200x300")
-        self.window.title("PopUp")
-        self.window['bg'] = '#91C8E4'    
-    def refresh(self):
-        self.window.mainloop()
+        pass
+    def __new__(cls):
+        global window
+        if cls.instancia is None:
+            cls.instancia = super().__new__(cls)
+            window=Tk()
+            '''
+            if not window.winfo_exists():
+                cls.instancia=None
+            else:
+                cls.instancia = super().__new__(cls)
+                '''
+                
+            window.geometry("200x300")
+            window.title("PopUp")
+            window['bg'] = '#91C8E4'
+            print(window.winfo_exists())
+
+
+        
+            window.mainloop()
+        else:
+            print("no")
+            try:
+                if not window.winfo_exists():
+                    cls.instancia=None
+            except:
+                print("test")
+                cls.instancia=None
+        return cls.instancia
+    
 
