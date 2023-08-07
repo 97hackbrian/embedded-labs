@@ -42,23 +42,14 @@ def products(obj,n):
 if __name__ == '__main__':
     root=Tk()
     start=window(parent=root)
-    product1=products("zapato",130,root)
-    #product2=products("pantalon",190,start)
-    #product3=products("camisa",320,start)
-    
-    '''
-    start.buttons("añadir",100,100)
-    start.buttons("añadir",200,100)
-    start.buttons("añadir",300,100)
-    start.buttons("añadir",400,100)
-    '''
+    product1=products("Led",0.5,root)
+    product2=products("Motor",25,root)
+    product3=products("Rele",35,root)
+    product4=products("Servo",80,root)
     product1.show(400,300)
-    #product2.show(400,400)
-    #product3.show(400,500)
-    ##products(start,3)
-
-
-    #root.mainloop()
+    product2.show(400,450)
+    product3.show(400,600)
+    product4.show(400,750)
     start.refresh()
     
     

@@ -34,26 +34,57 @@ class products:
         self.prizeDisp=Label(win,text=p)
         self.addB=Button(win,text="add",command=self.sum)
         
-        self.lessB=Button(win,text="remove")
+        self.lessB=Button(win,text="remove",command=self.res)
         self.d=0
         self.countDisp=Label(self.wind,text=self.d)
+
+
+        self.Cname=Label(win,text="Product name")
+        self.Cprize=Label(win,text="Prize of product")
+        self.Cquantity=Label(win,text="Quantity")
+
+        self.Try=Button(win,text="TRY componet",command=self.uart)
+        self.wind.update()
+        
+
+        
+    def uart(self):
+        pass
         
 
     def sum(self):
         self.d=self.d+1
-        print(self.d)
+        print("func: ",self.d)
+        self.countDisp.configure(text=self.d)
+        self.wind.update()
+    def res(self):
+        if(not self.d==0):
+            self.d=self.d-1
+            print("func: ",self.d)
+            self.countDisp.configure(text=self.d)
+            self.wind.update()
+        
+        
         
 
     def show(self,x1,y1):
-        self.nameDisp.place(x=x1-120,y=y1)
-        self.prizeDisp.place(x=x1-40,y=y1)
+        self.Cname.place(x=x1-120,y=y1-30)
+        self.nameDisp.place(x=x1-95,y=y1)
+        self.Cprize.place(x=x1-7,y=y1-30)
+        self.prizeDisp.place(x=x1+25,y=y1)
         #self.addB.position(x+10,y,win,"add")
-        self.addB.place(x=x1+10,y=y1)
+        self.addB.place(x=x1+150,y=y1)
         #self.lessB.position(x+120,y,win,"remove")
-        self.lessB.place(x=x1+120,y=y1)
+        self.lessB.place(x=x1+280,y=y1)
         #print(obj.quanty(self.d))
+        self.Try.place(x=x1+390,y=y1)
         
-        self.countDisp.place(x=x1+80,y=y1)
+        print("disp: ",self.d)
+       
+        self.Cquantity.place(x=x1+218,y=y1-30)
+        self.countDisp.place(x=x1+235,y=y1)
+        self.wind.update()
+    
 
     
 
