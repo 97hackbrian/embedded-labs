@@ -1,6 +1,6 @@
 from tkinter import *
 import tkinter.font as tkFont
-
+from img.wpopup import *
 
 class window:
     
@@ -18,17 +18,22 @@ class window:
         self.label.config(font=self.labelf)
         
         
-        car = PhotoImage(file="prelab\img\carrito.png")
-        car = car.zoom(25)
-        car = car.subsample(150)
-        boton = Button(parent,image=car)
-        boton.place(x=680, y=20)
+        
         parent.update()
 
         
 
     def refresh(self):
+        car = PhotoImage(file="prelab/img/carrito.png")
+        car = car.zoom(25)
+        car = car.subsample(150)
+        boton = Button(self.window,image=car,command=self.InitPopUp)
+        boton.place(x=680, y=20)
         self.window.mainloop()
+
+    def InitPopUp(self):
+        Pop=popup()
+        Pop.refresh()
     
     def exitmain(self):
         self.window.destroy()
