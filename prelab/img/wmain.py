@@ -45,24 +45,32 @@ class window:
 
 class products:
     def __init__(self,n,p,win):
-        self.Text = tkFont.Font(family="Comic Sans MS", size=12, weight="bold",slant="italic",font=("Segoe Script", 18,'bold'))
+        self.Text = tkFont.Font(family="Comic Sans MS", size=12, weight="bold",slant="italic",font=("Garamond", 11,'bold'))
+        self.T = tkFont.Font(family="Comic Sans MS", size=12, weight="bold",slant="italic",font=("Times New Roman", 11,'bold'))
+
         self.wind=win
         self.name=n
         self.prize=p
-        self.nameDisp=Label(win,text=n)
-        self.prizeDisp=Label(win,text=p)
-        self.addB=Button(win,text="add",command=self.sum)
+        self.nameDisp=Label(win,text=n,bg='#F6F4EB')
+        self.prizeDisp=Label(win,text=p,bg='#F6F4EB')
+        self.addB=Button(win,text="Add",command=self.sum,bg='#749BC2')
         
-        self.lessB=Button(win,text="remove",command=self.res)
+        self.lessB=Button(win,text="Remove",command=self.res,bg='#749BC2')
         self.d=0
-        self.countDisp=Label(self.wind,text=self.d)
+        self.countDisp=Label(self.wind,text=self.d,bg='#F6F4EB')
 
 
-        self.Cname=Label(win,text="Product name")
-        self.Cprize=Label(win,text="Prize of product")
-        self.Cquantity=Label(win,text="Quantity")
+        self.Cname=Label(win,text="Product name",bg='#F6F4EB')
+        self.Cprize=Label(win,text="Prize of product",bg='#F6F4EB')
+        self.Cquantity=Label(win,text="Quantity",bg='#F6F4EB')
 
-        self.Try=Button(win,text="TRY componet",command=self.uart)
+        self.Try=Button(win,text="Try Componet",command=self.uart,bg='#749BC2')
+        
+        self.nameDisp.config(font=self.T)
+        self.Cname.config(font=self.Text)
+        self.Cprize.config(font=self.Text)
+        self.Cquantity.config(font=self.Text)
+
         self.wind.update()
         
 
@@ -100,7 +108,7 @@ class products:
         
         print("disp: ",self.d)
        
-        self.Cquantity.place(x=x1+218,y=y1-30)
+        self.Cquantity.place(x=x1+210,y=y1-30)
         self.countDisp.place(x=x1+235,y=y1)
         self.wind.update()
     
