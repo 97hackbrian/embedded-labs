@@ -1,17 +1,30 @@
 from tkinter import *
 import tkinter.font as tkFont
 
-#from tkinter import ttk
 
 class window:
     
     def __init__(self,parent=None):
         self.window = parent
-        self.window.geometry("1200x700")
+        self.window.geometry("700x600")
         self.window.title("main")
-        self.window['bg'] = '#A307AF'
+        self.window['bg'] = '#F6F4EB'    
+          
 
+        
+        self.label = Label(parent, text="¡Bear Store DB!", bg='#F6F4EB',fg='#4682A9')
+        self.label.pack(anchor=CENTER)
+        self.labelf = tkFont.Font(family="Comic Sans MS", size=100, weight="bold",slant="italic",font=("Segoe Script", 35,'bold'))
+        self.label.config(font=self.labelf)
+        
+        
+        car = PhotoImage(file="prelab\img\carrito.png")
+        car = car.zoom(25)
+        car = car.subsample(150)
+        boton = Button(image=car)
+        boton.place(x=580, y=480)
 
+        parent.mainloop()
 
     def refresh(self):
         self.window.mainloop()

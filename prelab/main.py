@@ -1,5 +1,5 @@
 ###MODULOS###
-import serial,time
+#import serial,time
 from tkinter import *
 import numpy as np
 from PIL import Image,ImageTk,ImageSequence
