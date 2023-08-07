@@ -3,7 +3,7 @@ import serial,time
 from tkinter import *
 from PIL import Image,ImageTk,ImageSequence
 from img.wmain import *
-#############
+##############################################
 
 ###variables globales####
 deal=[0,0,0]
