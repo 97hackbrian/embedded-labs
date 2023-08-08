@@ -1,9 +1,12 @@
 from tkinter import *
 import tkinter.font as tkFont
 from img.wpopup import *
+import numpy as np
 
+array=np.array([0,0,0,0])
+np.savetxt("cart.txt", array)
 class window:
-    
+    global array
     def __init__(self,parent=None):
         self.window = parent
         self.window.geometry("800x600")
@@ -18,7 +21,8 @@ class window:
         self.label.config(font=self.labelf)
         
         
-        
+        self.file_name = "cart.txt"
+        self.dat=array
         parent.update()
 
         
@@ -29,11 +33,14 @@ class window:
         car = car.subsample(150)
         boton = Button(self.window,image=car,command=self.InitPopUp)
         boton.place(x=680, y=20)
+        #np.savetxt(self.file_name, self.dat)
         self.window.mainloop()
 
     def InitPopUp(self):
+        #np.savetxt(self.file_name, self.dat)
         Rei=popup()
         Pop=popup()
+        #np.savetxt(self.file_name, self.dat)
         #Pop.refresh()
     
     def exitmain(self):
@@ -45,6 +52,7 @@ class window:
 
 
 class products:
+    global array
     def __init__(self,n,p,win):
         self.Text = tkFont.Font(family="GistLight", size=10, weight="bold",slant="italic")
         self.T = tkFont.Font(family="Garamond", size=12, weight="normal",slant="roman")
@@ -80,6 +88,10 @@ class products:
         self.Cprize.config(font=self.Text)
         self.Cquantity.config(font=self.Text)
 
+        
+        self.file_name = "cart.txt"
+        #np.savetxt(self.file_name,array)
+        self.f=array
         self.wind.update()
         
 
@@ -89,18 +101,46 @@ class products:
         
 
     def sum(self):
+        
         self.d=self.d+1
         print("func: ",self.d)
+        self.txt()
+        np.savetxt(self.file_name, self.f)
+        #popup()
+
         self.countDisp.configure(text=self.d)
         self.wind.update()
     def res(self):
+        
         if(not self.d==0):
             self.d=self.d-1
             print("func: ",self.d)
+            self.txt()
+            np.savetxt(self.file_name, self.f)
+            #popup()
+
             self.countDisp.configure(text=self.d)
             self.wind.update()
-        
-        
+    
+    def get_instance_name(self):
+        for name, obj in globals().items():
+            if obj is self:
+                return name
+        return None
+    
+    def txt(self):
+        #with open(self.file_name, 'a') as f:
+        if(self.name=="Led"):
+            self.f[0]=self.d
+        if(self.name=="Motor"):
+            self.f[1]=self.d
+        if(self.name=="Rele"):
+            self.f[2]=self.d
+        if(self.name=="Servo"):
+            self.f[3]=self.d
+        #np.savetxt(self.file_name, self.f)
+
+    
         
 
     def show(self,x1,y1):
@@ -119,6 +159,8 @@ class products:
        
         self.Cquantity.place(x=x1+210,y=y1-30)
         self.countDisp.place(x=x1+235,y=y1)
+
+        
         self.wind.update()
     
 
