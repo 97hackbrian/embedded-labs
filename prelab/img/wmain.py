@@ -4,7 +4,7 @@ from img.wpopup import *
 import numpy as np
 
 array=np.array([0,0,0,0])
-np.savetxt("cart.txt", array)
+np.savetxt("prelab/cart.txt", array)
 class window:
     global array
     def __init__(self,parent=None):
@@ -12,20 +12,16 @@ class window:
         self.window.geometry("800x600")
         self.window.title("main")
         self.window['bg'] = '#F6F4EB'    
-          
-
         
         self.label = Label(parent, text="Bear Store DB", bg='#F6F4EB',fg='#4682A9')
         self.label.pack(anchor=CENTER)
         self.labelf = tkFont.Font(family="graduation", size=60, weight="bold",slant="italic")
         self.label.config(font=self.labelf)
         
-        
-        self.file_name = "cart.txt"
+        self.file_name = "prelab/cart.txt"
         self.dat=array
         parent.update()
 
-        
 
     def refresh(self):
         car = PhotoImage(file="prelab/img/carrito.png")
@@ -33,14 +29,11 @@ class window:
         car = car.subsample(150)
         boton = Button(self.window,image=car,command=self.InitPopUp)
         boton.place(x=680, y=20)
-        #np.savetxt(self.file_name, self.dat)
         self.window.mainloop()
 
     def InitPopUp(self):
-        #np.savetxt(self.file_name, self.dat)
         Rei=popup()
         Pop=popup()
-        #np.savetxt(self.file_name, self.dat)
         #Pop.refresh()
     
     def exitmain(self):
@@ -69,7 +62,6 @@ class products:
         self.d=0
         self.countDisp=Label(self.wind,text=self.d,bg='#F6F4EB')
 
-
         self.Cname=Label(win,text="Product name",bg='#F6F4EB')
         self.Cprize=Label(win,text="Prize of product",bg='#F6F4EB')
         self.Cquantity=Label(win,text="Quantity",bg='#F6F4EB')
@@ -87,9 +79,8 @@ class products:
         self.Cname.config(font=self.Text)
         self.Cprize.config(font=self.Text)
         self.Cquantity.config(font=self.Text)
-
         
-        self.file_name = "cart.txt"
+        self.file_name = "prelab/cart.txt"
         #np.savetxt(self.file_name,array)
         self.f=array
         self.wind.update()
@@ -98,12 +89,11 @@ class products:
         
     def uart(self):
         pass
-        
 
     def sum(self):
         
         self.d=self.d+1
-        print("func: ",self.d)
+        #print("func: ",self.d)
         self.txt()
         np.savetxt(self.file_name, self.f)
         #popup()
@@ -114,7 +104,7 @@ class products:
         
         if(not self.d==0):
             self.d=self.d-1
-            print("func: ",self.d)
+            #print("func: ",self.d)
             self.txt()
             np.savetxt(self.file_name, self.f)
             #popup()
@@ -148,35 +138,13 @@ class products:
         self.nameDisp.place(x=x1-95,y=y1)
         self.Cprize.place(x=x1-7,y=y1-30)
         self.prizeDisp.place(x=x1+25,y=y1)
-        #self.addB.position(x+10,y,win,"add")
         self.addB.place(x=x1+150,y=y1)
-        #self.lessB.position(x+120,y,win,"remove")
         self.lessB.place(x=x1+280,y=y1)
-        #print(obj.quanty(self.d))
         self.Try.place(x=x1+390,y=y1)
         
-        print("disp: ",self.d)
+        #print("disp: ",self.d)
        
         self.Cquantity.place(x=x1+210,y=y1-30)
         self.countDisp.place(x=x1+235,y=y1)
 
-        
         self.wind.update()
-    
-
-    
-
-
-
-
-
-'''
-class product:
-def __init__(self,obj,n,prize):
-    self.win=
-    self.n=n
-    self.prize=prize
-def create(self):
-    for x in range(self.n):
-        self.win.bu(x,100*x,100)
-'''            
