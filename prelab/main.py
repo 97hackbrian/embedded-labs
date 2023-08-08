@@ -11,7 +11,7 @@ deal=np.array([0,0,0])
 
 
 
-#region Serial
+
 '''
 ########## CONEXION MEDIANTE EL PROTOCOLO SERIAL ###############
 try:
