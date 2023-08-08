@@ -12,9 +12,9 @@ class window:
           
 
         
-        self.label = Label(parent, text="¡Bear Store DB!", bg='#F6F4EB',fg='#4682A9')
+        self.label = Label(parent, text="Bear Store DB", bg='#F6F4EB',fg='#4682A9')
         self.label.pack(anchor=CENTER)
-        self.labelf = tkFont.Font(family="Comic Sans MS", size=100, weight="bold",slant="italic",font=("Segoe Script", 35,'bold'))
+        self.labelf = tkFont.Font(family="graduation", size=60, weight="bold",slant="italic")
         self.label.config(font=self.labelf)
         
         
@@ -46,17 +46,18 @@ class window:
 
 class products:
     def __init__(self,n,p,win):
-        self.Text = tkFont.Font(family="Comic Sans MS", size=12, weight="bold",slant="italic",font=("Garamond", 11,'bold'))
-        self.T = tkFont.Font(family="Comic Sans MS", size=12, weight="bold",slant="italic",font=("Times New Roman", 11,'bold'))
+        self.Text = tkFont.Font(family="GistLight", size=10, weight="bold",slant="italic")
+        self.T = tkFont.Font(family="Garamond", size=12, weight="normal",slant="roman")
+        self.Te = tkFont.Font(family="Garamond", size=12, weight="bold",slant="roman")
 
         self.wind=win
         self.name=n
         self.prize=p
         self.nameDisp=Label(win,text=n,bg='#F6F4EB')
         self.prizeDisp=Label(win,text=p,bg='#F6F4EB')
-        self.addB=Button(win,text="Add",command=self.sum,bg='#749BC2')
+        self.addB=Button(win,text="Add",command=self.sum,bg='#749BC2',fg='#FFFFFF')
         
-        self.lessB=Button(win,text="Remove",command=self.res,bg='#749BC2')
+        self.lessB=Button(win,text="Remove",command=self.res,bg='#749BC2',fg='#FFFFFF')
         self.d=0
         self.countDisp=Label(self.wind,text=self.d,bg='#F6F4EB')
 
@@ -65,9 +66,16 @@ class products:
         self.Cprize=Label(win,text="Prize of product",bg='#F6F4EB')
         self.Cquantity=Label(win,text="Quantity",bg='#F6F4EB')
 
-        self.Try=Button(win,text="Try Componet",command=self.uart,bg='#749BC2')
+        self.Try=Button(win,text="Try Componet",command=self.uart,bg='#91C8E4')
         
         self.nameDisp.config(font=self.T)
+        self.prizeDisp.config(font=self.T)
+        self.countDisp.config(font=self.T)
+
+        self.addB.config(font=self.Te)
+        self.lessB.config(font=self.Te)
+        self.Try.config(font=self.Te)
+
         self.Cname.config(font=self.Text)
         self.Cprize.config(font=self.Text)
         self.Cquantity.config(font=self.Text)
