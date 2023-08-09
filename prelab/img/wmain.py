@@ -130,14 +130,11 @@ class products:
             self.f[3]=self.d
         #np.savetxt(self.file_name, self.f)
 
-    
-        
-
     def show(self,x1,y1):
         self.Cname.place(x=x1-120,y=y1-30)
-        self.nameDisp.place(x=x1-95,y=y1)
-        self.Cprize.place(x=x1-7,y=y1-30)
-        self.prizeDisp.place(x=x1+25,y=y1)
+        self.nameDisp.place(x=x1-80,y=y1)
+        self.Cprize.place(x=x1+2,y=y1-30)
+        self.prizeDisp.place(x=x1+47,y=y1)
         self.addB.place(x=x1+150,y=y1)
         self.lessB.place(x=x1+280,y=y1)
         self.Try.place(x=x1+390,y=y1)

@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter.font as tkFont
 import numpy as np
 arrayR=np.array([0,0,0,0])
 class popup:
@@ -25,25 +26,40 @@ class popup:
             window['bg'] = '#91C8E4'
             #print(window.winfo_exists())
 
-            Title=Label(window,text="Cart",bg="#F6F4EB")
+            labelf = tkFont.Font(family="graduation", size=70, weight="normal",slant="roman")
+
+            Title=Label(window,text="Cart",bg="#91C8E4")
+            Title.config(font=tkFont.Font(family="graduation", size=80, weight="bold",slant="italic"))
             Title.pack(anchor=CENTER)
 
+            
+            
             #print(cls.new)
-            p1=Label(window,text=str(arrayR[0]),bg="#F6F4EB")
-            p2=Label(window,text=str(arrayR[1]),bg="#F6F4EB")
-            p3=Label(window,text=str(arrayR[2]),bg="#F6F4EB")
-            p4=Label(window,text=str(arrayR[3]),bg="#F6F4EB")
-
+            stp1=arrayR[0]*0.5
+            stp2=arrayR[1]*25
+            stp3=arrayR[2]*35
+            stp4=arrayR[3]*80
+            p1=Label(window,text="Led -  Quantity: "+str(arrayR[0])+"    Subtotal: "+str(stp1),bg="#91C8E4")
+            p2=Label(window,text="Motor -  Quantity: "+str(arrayR[1])+"    Subtotal: "+str(stp2),bg="#91C8E4")
+            p3=Label(window,text="Rele -  Quantity: "+str(arrayR[2])+"    Subtotal: "+str(stp3),bg="#91C8E4")
+            p4=Label(window,text="Servo -  Quantity: "+str(arrayR[3])+"    Subtotal: "+str(stp4),bg="#91C8E4")
+            p1.config(font=labelf)
+            p2.config(font=labelf)
+            p3.config(font=labelf)
+            p4.config(font=labelf)
             if(arrayR[0]>0):
-                p1.pack(anchor="center")
+                p1.pack(ipady="10")
             if(arrayR[1]>0):
-                p2.pack(anchor="center")
+                p2.pack(ipady="10")
             if(arrayR[2]>0):
-                p3.pack(anchor="center")
+                p3.pack(ipady="10")
             if(arrayR[3]>0):
-                p4.pack(anchor="center")
+                p4.pack(ipady="10")
 
-            window.update()
+            Total=Label(window,text="TOTAL  "+str(stp1+stp2+stp3+stp4),bg="#91C8E4")
+            Total.config(font=labelf)
+            Total.pack(fill="y",ipady="20")
+            #window.update()
             window.mainloop()
         else:
             print("no")
