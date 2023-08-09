@@ -29,8 +29,19 @@ class popup:
             Title.pack(anchor=CENTER)
 
             #print(cls.new)
-            p1=Label(window,text=str(arrayR),bg="#F6F4EB")
-            p1.place(x=50,y=50)
+            p1=Label(window,text=str(arrayR[0]),bg="#F6F4EB")
+            p2=Label(window,text=str(arrayR[1]),bg="#F6F4EB")
+            p3=Label(window,text=str(arrayR[2]),bg="#F6F4EB")
+            p4=Label(window,text=str(arrayR[3]),bg="#F6F4EB")
+
+            if(arrayR[0]>0):
+                p1.pack(anchor="center")
+            if(arrayR[1]>0):
+                p2.pack(anchor="center")
+            if(arrayR[2]>0):
+                p3.pack(anchor="center")
+            if(arrayR[3]>0):
+                p4.pack(anchor="center")
 
             window.update()
             window.mainloop()

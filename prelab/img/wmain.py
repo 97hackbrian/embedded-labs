@@ -88,7 +88,7 @@ class products:
 
         
     def uart(self):
-        pass
+        print("arduino")
 
     def sum(self):
         
