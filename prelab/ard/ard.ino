@@ -54,9 +54,9 @@ void loop() {
 
     if (command == '3') {
       for(int x=0;x<=10;x++){    
-        digitalWrite(relayPin, HIGH);
-        delay(100);
         digitalWrite(relayPin, LOW);
+        delay(100);
+        digitalWrite(relayPin, HIGH);
         delay(100);
       }
     }
