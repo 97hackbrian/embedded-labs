@@ -40,8 +40,12 @@ def products(obj,n):
 ######### CONFIGURACIÓN DE LA VENTANA PRINCIPAL #################
 
 if __name__ == '__main__':
-    root=Tk()
-    start=window(parent=root)
+    #root=Tk()
+
+
+    start=window("800x600")
+    
+    '''
     product1=products("Led",0.5,root)
     product2=products("Motor",25,root)
     product3=products("Rele",35,root)
@@ -50,7 +54,7 @@ if __name__ == '__main__':
     product2.show(250,250)
     product3.show(250,350)
     product4.show(250,450)
-    start.refresh()
+    start.refresh()'''
     
     
 #endregion Window

@@ -39,8 +39,7 @@ class popup:
         File.write("\n TOTAL: "+str(stp1+stp2+stp3+stp4)+" Bs.")
         
         window.destroy()
-        sys.stdout.flush()
-        os.execv(sys.argv[0], sys.argv)
+        
     
 
 
