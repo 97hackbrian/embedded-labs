@@ -2,6 +2,7 @@
 #define ledPin 9
 #define relayPin 5      
 #define servoPin 2
+Servo servoMotor;
 
 #define pwma 6
 #define ain2 7
@@ -14,7 +15,9 @@ void setup() {
   pinMode(ain1,OUTPUT);
   pinMode(ain2,OUTPUT);
   pinMode(servoPin,OUTPUT);
-  //servoMotor.attach(servoPin);
+  servoMotor.attach(servoPin);
+  servoMotor.write(-90);
+  digitalWrite(relayPin, HIGH);
 }
 
 void loop() {
@@ -58,21 +61,24 @@ void loop() {
       }
     }
     else{
-      digitalWrite(relayPin, LOW);
+      digitalWrite(relayPin, HIGH);
     }
 
 
 
     if (command == '4') {
-      for(int x=0;x<=10;x++){    
-        digitalWrite(servoPin, HIGH);
-        delay(100);
-        digitalWrite(servoPin, LOW);
-        delay(100);
+      servoMotor.write(-90);
+      for(int x=-90;x<=90;x++){    
+        servoMotor.write(x);
+        delay(5);
+      }
+      for(int x=90;x>=-90;x--){    
+        servoMotor.write(x);
+        delay(5);
       }
     }
     else{
-      digitalWrite(servoPin, LOW);
+      servoMotor.write(-90);
     }
 }
 }

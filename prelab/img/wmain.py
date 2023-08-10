@@ -8,7 +8,7 @@ array=np.array([0,0,0,0])
 np.savetxt("prelab/cart.txt", array)
 
 try:
-    ard=serial.Serial("COM6",9600)
+    ard=serial.Serial("/dev/ttyUSB0",9600)
     print("Connected")
 except:
     print("Error to connect")
