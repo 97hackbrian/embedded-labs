@@ -27,14 +27,14 @@ class window:
 
 
 
-        product1=products("Led",0.5,photocomp1,self.window)
-        product2=products("Motor",25,photocomp2,self.window)
-        product3=products("Rele",35,photocomp3,self.window)
-        product4=products("Servo",80,photocomp4,self.window)
-        product1.show(250,150)
-        product2.show(250,250)
-        product3.show(250,350)
-        product4.show(250,450)
+        self.product1=products("Led",0.5,photocomp1,self.window)
+        self.product2=products("Motor",25,photocomp2,self.window)
+        self.product3=products("Rele",35,photocomp3,self.window)
+        self.product4=products("Servo",80,photocomp4,self.window)
+        self.product1.show(250,150)
+        self.product2.show(250,250)
+        self.product3.show(250,350)
+        self.product4.show(250,450)
         
       
         car = self.CreateImg("prelab/img/carrito.png",25,150)
@@ -49,6 +49,10 @@ class window:
         
 
     def InitPopUp(self):
+        self.product1.reset()
+        self.product2.reset()
+        self.product3.reset()
+        self.product4.reset()
         Rei=popup()
         Pop=popup()
         #Pop.refresh()
@@ -137,7 +141,12 @@ class products:
             self.countDisp.configure(text=self.d)
             self.wind.update()
     
-
+    def reset(self):
+        self.d=0
+        self.f=array
+        self.txt()
+        self.countDisp.configure(text=self.d)
+        self.wind.update()
     
     def txt(self):
         if(self.name=="Led"):

@@ -19,6 +19,7 @@ class popup:
     
     def hist():
         global arrayR
+        arrayR = np.loadtxt('prelab/cart.txt')
         stp1=arrayR[0]*0.5
         stp2=arrayR[1]*25
         stp3=arrayR[2]*35
@@ -38,6 +39,10 @@ class popup:
         
         File.write("\n TOTAL: "+str(stp1+stp2+stp3+stp4)+" Bs.")
         
+        arrayR=np.array([0,0,0,0])
+        file_name = "prelab/cart.txt"
+        f=np.array([0,0,0,0])
+        np.savetxt(file_name, f)
         window.destroy()
         
     
@@ -56,6 +61,7 @@ class popup:
 
         if cls.instancia is None:
             cls.instancia = super().__new__(cls)
+            arrayR = np.loadtxt('prelab/cart.txt')
             window=Tk()
             
             window.geometry("450x600")
