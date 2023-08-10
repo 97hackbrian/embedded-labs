@@ -3,8 +3,6 @@ import tkinter.font as tkFont
 import numpy as np
 import datetime
 
-import os
-import sys
 arrayR=np.array([0,0,0,0])
 class popup:
     instancia = None

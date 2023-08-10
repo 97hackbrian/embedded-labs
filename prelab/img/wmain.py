@@ -2,10 +2,16 @@ from tkinter import *
 import tkinter.font as tkFont
 from img.wpopup import *
 import numpy as np
-
+import serial
+import time
 array=np.array([0,0,0,0])
 np.savetxt("prelab/cart.txt", array)
 
+try:
+    ard=serial.Serial("COM6",9600)
+    print("Connected")
+except:
+    print("Error to connect")
 
 class window:
     global array
@@ -118,7 +124,28 @@ class products:
 
         
     def uart(self):
-        print("arduino")
+        global ard
+        try:
+            #ard=serial.Serial("COM6",9600)
+            print("CONEXION CORRECTA")
+            print("arduino ",self.name)
+            if(self.name=="Led"):
+                ard.write('1'.encode())
+            elif(self.name=="Motor"):
+                 ard.write('2'.encode())
+            elif(self.name=="Rele"):
+                 ard.write('3'.encode())
+            elif(self.name=="Servo"):
+                 ard.write('4'.encode())
+            
+            
+
+        except:
+            print("NO SE PUDO CONECTAR")
+
+
+        
+        
 
     def sum(self):
         
