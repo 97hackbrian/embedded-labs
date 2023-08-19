@@ -36,7 +36,7 @@ class counterTime:
 		#print(self.count)
 
 	def change (self):
-		if(self.count>len(self.pinleds)):
+		if(self.count>(len(self.pinleds)-2)):
 			self.count=0
 		else:
 			self.count=self.count+1

@@ -50,7 +50,7 @@ class counter:
 			self.less()
 			time.sleep(0.7)
 		outs=format(self.count,"b")
-		outs=outs.zfill(4)
+		outs=outs.zfill(len(self.pinleds))#outs=outs.zfill(4)
 		print(outs)
 		flag=0
 		for pin in self.pinleds:
