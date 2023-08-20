@@ -1,16 +1,9 @@
 import RPi.GPIO as GPIO
+import continuous_threading
 import time
-
-
-'''led1=5
-led2=6
-led3=13
-led4=26'''
 
 led=[23,24,13,26]
 
-#bott1=17
-#bott2=27
 bootons=[2,3]
 
 class counterTime:
@@ -24,37 +17,59 @@ class counterTime:
 
 		for pin in leds:
 			GPIO.setup(pin,GPIO.OUT)
+		for pin in leds:
+			GPIO.output(pin,0)
 
 		for pin in buttons:
 			GPIO.setup(pin,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+
+		self.th = continuous_threading.ContinuousThread(target=self.Actions)
+		self.th.start()
+    	
 
 	def addT (self):
 		if(self.countT>=1):
 			self.countT=self.countT+1
 		else:
 			self.countT=1
-		#print(self.count)
+
 
 	def change (self):
 		if(self.count>(len(self.pinleds)-2)):
 			self.count=0
 		else:
 			self.count=self.count+1
-		#print(self.count)
+
+	def Actions(self):
+		while True:
+			GPIO.output(self.pinleds[self.count],1)
+			time.sleep(self.countT)
+			GPIO.output(self.pinleds[self.count],0)
+			time.sleep(1)
 		
-	
 	def refresh(self):
 		if(GPIO.input( self.botones[0] ) == GPIO.LOW):
-			self.addT()
-			time.sleep(0.7)
+			while True:
+				if(GPIO.input( self.botones[0] ) == GPIO.HIGH):
+					self.addT()
+					time.sleep(0.3)
+					print("Time+1= ",self.countT)
+					break
+
 		elif(GPIO.input( self.botones[1] ) == GPIO.LOW):
-			self.change()
-			self.countT=1
-			time.sleep(0.7)
-		GPIO.output(self.pinleds[self.count],1)
-		time.sleep(self.countT)
-		GPIO.output(self.pinleds[self.count],0)
-		time.sleep(1)
+			'''for pin in self.pinleds:
+						GPIO.output(pin,0)'''
+			while True:
+				if(GPIO.input( self.botones[1] ) == GPIO.HIGH):
+					self.countT=1
+					GPIO.output(self.pinleds[self.count],0)
+					self.change()
+					time.sleep(0.2)
+					print("Led [",self.count,"]")
+					break
+		
+		continuous_threading.shutdown(0)
+		
 
 
 

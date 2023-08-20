@@ -1,16 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
-
-'''led1=5
-led2=6
-led3=13
-led4=26'''
-
 led=[23,24,13,26]
 
-#bott1=17
-#bott2=27
 bootons=[2,3]
 
 class counter:
@@ -44,11 +36,18 @@ class counter:
 	
 	def refresh(self):
 		if(GPIO.input( self.botones[0] ) == GPIO.LOW):
-			self.add()
-			time.sleep(0.7)
+			while True:
+				if(GPIO.input( self.botones[0] ) == GPIO.HIGH):
+					self.add()
+					time.sleep(0.4)
+					break
+
 		elif(GPIO.input( self.botones[1] ) == GPIO.LOW):
-			self.less()
-			time.sleep(0.7)
+			while True:
+				if(GPIO.input( self.botones[1] ) == GPIO.HIGH):
+					self.less()
+					time.sleep(0.4)
+					break
 		outs=format(self.count,"b")
 		outs=outs.zfill(len(self.pinleds))#outs=outs.zfill(4)
 		print(outs)
