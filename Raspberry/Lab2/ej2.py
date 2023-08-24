@@ -48,9 +48,12 @@ class counter:
 					self.less()
 					time.sleep(0.4)
 					break
+		print(outs)
+		print(hex(outs))
 		outs=format(self.count,"b")
 		outs=outs.zfill(len(self.pinleds))#outs=outs.zfill(4)
 		print(outs)
+		
 		flag=0
 		for pin in self.pinleds:
 			GPIO.output(pin,int(outs[flag]))
