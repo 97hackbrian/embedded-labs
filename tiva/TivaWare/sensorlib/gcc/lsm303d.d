@@ -1,0 +1,3 @@
+gcc/lsm303d.o: lsm303d.c \
+ /usr/lib/gcc/arm-none-eabi/12.2.1/include/stdint.h \
+ ../sensorlib/hw_lsm303d.h ../sensorlib/i2cm_drv.h ../sensorlib/lsm303d.h
