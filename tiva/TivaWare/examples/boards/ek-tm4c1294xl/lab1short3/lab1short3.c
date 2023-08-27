@@ -60,53 +60,31 @@ __error__(char *pcFilename, uint32_t ui32Line)
 int
 main(void)
 {
-    volatile uint32_t ui32Loop;
+    //volatile uint32_t ui32Loop;
 
-    //
-    // Enable the GPIO port that is used for the on-board LED.
-    //
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ);
 
-    //
-    // Check if the peripheral access is enabled.
-    //
     while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPION))
     {
     }
+    while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOJ))
+    {
+    }
 
-    //
-    // Enable the GPIO pin for the LED (PN0).  Set the direction as output, and
-    // enable the GPIO pin for digital function.
-    //
-    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0);
+    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_1);
+    
+    GPIOPinTypeGPIOInput(GPIO_PORTJ_BASE,GPIO_PIN_1);
+    GPIOPadConfigSet(GPIO_PORTJ_BASE,GPIO_PIN_1,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPU);
 
     //
     // Loop forever.
     //
     while(1)
     {
-        //
-        // Turn on the LED.
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);
-
-        //
-        // Delay for a bit.
-        //
-        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++)
-        {
-        }
-
-        //
-        // Turn off the LED.
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0x0);
-
-        //
-        // Delay for a bit.
-        //
-        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++)
-        {
-        }
+        if(GPIOPinRead(GPIO_PORTJ_BASE,GPIO_PIN_1)==0){
+        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1,GPIO_PIN_1);}
+        else{
+        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1,0x0);}   
     }
 }

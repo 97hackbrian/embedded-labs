@@ -79,34 +79,32 @@ main(void)
     // enable the GPIO pin for digital function.
     //
     GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0);
+    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_1);
 
     //
     // Loop forever.
     //
     while(1)
     {
-        //
-        // Turn on the LED.
-        //
+        
         GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);
+        
 
-        //
-        // Delay for a bit.
-        //
-        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++)
+        for(ui32Loop = 0; ui32Loop < 1000000; ui32Loop++)
         {
         }
 
-        //
-        // Turn off the LED.
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0x0);
+        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, GPIO_PIN_1);
 
-        //
-        // Delay for a bit.
-        //
-        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++)
+        
+        for(ui32Loop = 0; ui32Loop < 1000000; ui32Loop++)
+        {
+        }
+        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0x0);
+        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, 0x0);
+        for(ui32Loop = 0; ui32Loop < 1000000; ui32Loop++)
         {
         }
     }
+
 }
