@@ -21,16 +21,20 @@
 // This is part of revision 2.2.0.295 of the EK-TM4C1294XL Firmware Package.
 //
 //*****************************************************************************
-
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include "inc/hw_memmap.h"
 #include "driverlib/debug.h"
 #include "driverlib/gpio.h"
 #include "driverlib/sysctl.h"
+
+//Interrupciones
+
 #include "driverlib/interrupt.h"
 #include "driverlib/timer.h"
 #include "inc/tm4c1294ncpdt.h"
+
 //*****************************************************************************
 //
 //! \addtogroup example_list
@@ -56,119 +60,89 @@ __error__(char *pcFilename, uint32_t ui32Line)
 
 //*****************************************************************************
 //
-// Blink the on-board LED.
 
-
-
-
-
-
-
-
-
-
-
-
+//Funcion exterior para el uso de la interrupcion del timer 
+void timer0A_handler(void);
+int state=0;
+uint32_t FS = 120000000/1; //frecuencia del timer
 
 //
 //*****************************************************************************
 
-uint32_t FS=12000000*2;
-void timer0A_handler(void);
-uint8_t switch_state = 0;
-uint32_t button=0;
-
 int main(void)
 {
-    volatile uint32_t ui32Loop;
-    SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ|SYSCTL_OSC_MAIN|SYSCTL_USE_PLL|SYSCTL_CFG_VCO_480),120000000); //enables system clock
+    //volatile uint32_t ui32Loop; //Tipo de variable
+    
+    SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN | SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480),120000000); //enable system /clock
     //
-    // Enable the GPIO port that is used for the on-board LED.
+    // Enable the GPIO  N port that is used for the on-board LED.
     //
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
-
     //
-    // Check if the peripheral access is enabled.
+    // Enable timer peripheral
     //
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
     
+    //Programation of timer
+    TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
+    //Adjust time output of timer 
+    TimerLoadSet(TIMER0_BASE, TIMER_A, FS);
+    //Enable the interrupt
+    IntEnable(INT_TIMER0A);
+    //Enable interrupt of timer A
+    TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);   
+    //Enable of timer 
+    TimerEnable(TIMER0_BASE, TIMER_A);
+    IntMasterEnable();
+   
+    
+    
+    // Check if the peripheral N access is enabled.
+    //
+    while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPION))
+    {
+    }
+    
+ 
+
 
     //
     // Enable the GPIO pin for the LED (PN0).  Set the direction as output, and
     // enable the GPIO pin for digital function.
     //
-    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, GPIO_PIN_0);
+    GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, 0x03); //enable 0 y 1 pins N
 
     
-    TimerConfigure(TIMER0_BASE,TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER0_BASE,TIMER_A,FS);
-    IntMasterEnable();
-    IntEnable(INT_TIMER0A);
-    TimerIntEnable(TIMER0_BASE,TIMER_TIMA_TIMEOUT);
-    TimerEnable(TIMER0_BASE,TIMER_A);
-
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
-    //
-    // Loop forever.
-    //
-
 
     while(1)
-    {
-        //
-        // Turn on the LED.
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);
-
-        //
-        // Delay for a bit.
-        //
-        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++)
-        {
-        }
-
-        //
-        // Turn off the LED.
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0x0);
-
-        //
-        // Delay for a bit.
-        //
-        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++)
-        {
-        }
-
+   {
     }
-    
 }
 
-void timer0A_handler(void){
-    volatile uint32_t ui32Loop;
-    while(1)
-    {
-        //
-        // Turn on the LED.
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, GPIO_PIN_0);
 
-        //
-        // Delay for a bit.
-        //
-        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++)
-        {
-        }
-
-        //
-        // Turn off the LED.
-        //
-        GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_0, 0x0);
-
-        //
-        // Delay for a bit.
-        //
-        for(ui32Loop = 0; ui32Loop < 100000; ui32Loop++)
-        {
-        }
+void timer0A_handler(void)
+{
+	TimerIntClear(TIMER0_BASE, TIMER_A);
+	
+	if(state <=2){
+		GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
+		
+	}
+	
+	else if(state>2){
+		GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
+        
+	}
+    if(state==4){
+        state=0;
     }
-
+	
+	state++;
 }
+
+
+
+
+
+
+
