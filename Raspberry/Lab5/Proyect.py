@@ -3,7 +3,7 @@ import serial
 import time
 import numpy as np
 
-ser=serial.Serial("/dev/ttyACM2",9600,timeout=1)
+ser=serial.Serial("/dev/ttyACM1",9600,timeout=1)
 ser.reset_input_buffer()
 ser.reset_output_buffer()
 
@@ -68,7 +68,7 @@ motors=MotorController(IN1,IN2,PWMA,IN3,IN4,PWMB)
 GPIO.setup(booton,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 while(True):
     try:
-        arrayR = np.loadtxt('/root/Desktop/embedded-labs/Raspberry/Lab5/duty.txt')
+        arrayR = np.loadtxt('Raspberry/Lab5/duty.txt')
         value=ser.readline().decode('utf-8').rstrip()
         print("VALOR: ",value)
         if(value=="motor1"):
