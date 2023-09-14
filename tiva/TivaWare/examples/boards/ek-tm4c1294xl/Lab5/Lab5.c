@@ -42,11 +42,17 @@ int main(void)
 
     volatile uint32_t ui32Loop;
     SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN | SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480),120000000); //enable system /clock
-
+    //habilitacion de pines
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOQ);
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
     
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
+
+    //configuracion timer
     TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
     TimerLoadSet(TIMER0_BASE, TIMER_A, FS);
     IntEnable(INT_TIMER0A);
@@ -55,11 +61,7 @@ int main(void)
     IntMasterEnable();
    
 
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOQ);
-
+    // Configuracion del pin uart
     GPIOPinConfigure(GPIO_PA0_U0RX);
     GPIOPinConfigure(GPIO_PA1_U0TX);
 
@@ -71,14 +73,14 @@ int main(void)
     
 
     GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, 0x03);
-
+    // configuracion uart
     UARTStdioConfig(0,9600,120000000);
     //char msg[]="osita\n";
     
-
+    //configuracion botones 2
     GPIOPinTypeGPIOInput(GPIO_PORTJ_BASE,0x03);
     GPIOPadConfigSet(GPIO_PORTJ_BASE,0x03,GPIO_STRENGTH_2MA,GPIO_PIN_TYPE_STD_WPU);
-
+    // configuracion buzzer
     GPIOPinTypeGPIOOutput(GPIO_PORTQ_BASE,0X01);
     
     while(1)
@@ -146,59 +148,8 @@ void timer0A_handler(void)
             state=0;
             
         }
-        /*
-        if(state==4){
-            state=0;
-        }*/
-        state++;
 
-    //} 
-    
-    /*
-    while (1){
-	TimerIntClear(TIMER0_BASE, TIMER_A);
-    
-    UARTgets(data,20);
-    if(data=="buzzer"){//ard.write('1'.encode())
-        flag=1;
-        UARTprintf("Ok!\n");
     }
-    else{
-        flag=0;
-    }
-
-	if(flag==1)
-    {
-        for (size_t i = 0; i < 3; i++)
-        {
-        if(state <=2){
-            GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
-            GPIOPinWrite(GPIO_PORTQ_BASE, 0x01, 0x01);
-            
-        }
-        
-        else if(state>2){
-            GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
-            GPIOPinWrite(GPIO_PORTQ_BASE, 0x01, 0x00);
-            
-        }
-        if(state==4){
-            state=0;
-        }
-        
-        state++;
-        }
-
-        UARTprintf("Ok!\n");
-    }
-    else{
-        GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
-        GPIOPinWrite(GPIO_PORTQ_BASE, 0x01, 0x00);
-    }
-
-}
-*/
-}
 else{
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
         GPIOPinWrite(GPIO_PORTQ_BASE, 0x01, 0x00);
