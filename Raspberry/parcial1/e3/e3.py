@@ -12,7 +12,7 @@ GPIO.setmode(GPIO.BCM)
 valor_anterior = None
 while(True):
     try:
-        with open('Raspberry/parcial1/e3/duty.txt', 'r') as file:
+        with open('/root/Desktop/embedded-labs/Raspberry/parcial1/e3/duty.txt', 'r') as file:
             arrayR = file.readline().strip()
 
         print("VALOR:", arrayR)

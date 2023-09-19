@@ -192,9 +192,6 @@ int main(void)
     while(1)
     {
         UARTgets(data,2);
-    //strcat(data,"\n");
-    //UARTprintf(data);
-    //}
     
     if(strcmp(data, "0")==0){
 
@@ -253,7 +250,7 @@ void GPIOJ_handler(void) {
     }
     
     else if(status & GPIO_PIN_1){
-          SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
         TimerConfigure(TIMER0_BASE,TIMER_CFG_PERIODIC);
         TimerLoadSet(TIMER0_BASE,TIMER_A,FS);
         IntMasterEnable();
