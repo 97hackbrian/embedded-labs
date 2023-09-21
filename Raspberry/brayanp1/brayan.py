@@ -1,11 +1,11 @@
 import RPi.GPIO as GPIO
-import serial
 import time
+import serial
 import numpy as np
 
-ser=serial.Serial("/dev/ttyACM0",9600,timeout=1)
-ser.reset_input_buffer()
-ser.reset_output_buffer()
+serial=serial.Serial("/dev/ttyACM1",9600,timeout=1)
+serial.reset_input_buffer()
+serial.reset_output_buffer()
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -16,7 +16,6 @@ PWMA=13
 IN3=5
 IN4=6
 PWMB=12
-booton=2
 
 class MotorController():
     def __init__(self,IN1,IN2,PWMA,IN3,IN4,PWMB):
@@ -36,7 +35,9 @@ class MotorController():
         self.pwmb=GPIO.PWM(PWMB,50)
         self.pwma.start(0)
         self.pwmb.start(0)
-    def move(self,vel1,vel2):
+
+
+    def left(self, vel1):
         if(vel1>0):
             GPIO.output(self.IN1,GPIO.HIGH)
             GPIO.output(self.IN2,GPIO.LOW)
@@ -46,6 +47,8 @@ class MotorController():
             GPIO.output(self.IN2,GPIO.HIGH)
             self.pwma.ChangeDutyCycle(vel1*-1)
 
+
+    def right(self,vel2):
         if(vel2>0):
             GPIO.output(self.IN3,GPIO.HIGH)
             GPIO.output(self.IN4,GPIO.LOW)
@@ -54,44 +57,26 @@ class MotorController():
             GPIO.output(self.IN3,GPIO.LOW)
             GPIO.output(self.IN4,GPIO.HIGH)
             self.pwmb.ChangeDutyCycle(vel2*-1)
-        
-    def stop(self):
-        GPIO.output(self.IN1,GPIO.LOW)
-        GPIO.output(self.IN2,GPIO.LOW)
-        self.pwma.ChangeDutyCycle(0)
-        GPIO.output(self.IN3,GPIO.LOW)
-        GPIO.output(self.IN4,GPIO.LOW)
-        self.pwmb.ChangeDutyCycle(0)
+
 
 motors=MotorController(IN1,IN2,PWMA,IN3,IN4,PWMB)
+defR=5
+defL=5
 
-GPIO.setup(booton,GPIO.IN,pull_up_down=GPIO.PUD_UP)
-valor_anterior = None
-statedefault=0
+motors.right(defR)
+motors.left(defL)
+time.sleep(3)
 while(True):
     try:
-        with open('/root/Desktop/embedded-labs/Raspberry/michelle/duty.txt', 'r') as file:
-            arrayR = file.readline().strip()
-        value=ser.readline().decode('utf-8').rstrip()
-        print("VALOR: ",value,"txt ",arrayR)
-        
-        if(value=="Turnon"):
-            statedefault = 1 - statedefault  # Alternar entre 0 y 1
-            print("motorON" if statedefault == 1 else "motorOFF")
-        if(statedefault==1):
-            motors.move(60,60)
+        arrayR = np.loadtxt('/root/Desktop/embedded-labs/Raspberry/brayanp1/dutys.txt')
+        motors.right(arrayR[0])
+        motors.left(arrayR[1])
+        print("left motor=",arrayR[0],"and right motor=",arrayR[1])
+        if(arrayR[0]==0 or arrayR[1]==0):
+            serial.write("buzzer\n".encode())
         else:
-            motors.move(0,0)
-        
-     
-        if arrayR != valor_anterior:
-            ser.write(str(arrayR + "\n").encode())
-            valor_anterior = arrayR  # Actualiza el valor anterior
-      
-
-
-
+            serial.write("none\n".encode())
+        time.sleep(1)
     except:
         print("error")
-
-    
+        

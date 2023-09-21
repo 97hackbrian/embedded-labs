@@ -142,6 +142,8 @@ void timer1A_handler(void){
             GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
             count1++;
         }    }
+
+        
     else if (flag==1){
         if (count1==1){
             GPIOPinWrite(GPIO_PORTF_BASE, 0x11, 0x11);
