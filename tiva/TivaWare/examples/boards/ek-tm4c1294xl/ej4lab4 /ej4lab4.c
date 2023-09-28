@@ -177,29 +177,100 @@ void timer0A_handler(void){
     switch (c)
     {
     case 1:
-        GPIOPinWrite(GPIO_PORTF_BASE, 0x09, 0x00);
-        GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x02);
-        break;
+	     
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x03,0x00);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x10,0x00);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x01,0xff);
+	break;
+	   	   
     case 2:
-        GPIOPinWrite(GPIO_PORTF_BASE, 0x09, 0x00);
-        GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
-        break;
-
-    case 3:
-        GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
-        GPIOPinWrite(GPIO_PORTF_BASE, 0x09, 0x08);
-        break;
-
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x03,0x00);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x10,0xff);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x01,0x00);
+	break;
+	   
+	case 3:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x03,0x00);
+	    GPIOPinWrite(GPIO_PORTF_BASE, 0x11,0xff);
+	break;
+	   
     case 4:
-        GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
-        GPIOPinWrite(GPIO_PORTF_BASE, 0x09, 0x01);
-        break;
-
-    case 5:
-        c=0;
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x02,0x00);
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x01,0xff);  
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11,0x00);
+    break;
     
-    default:
-        break;
+    case 5:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x02,0x00);
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x01,0xff);  
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x10,0x00);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x01,0xff);
+    break;
+    
+    case 6:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x02,0x00);
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x01,0xff);  
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x10,0xff);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x01,0x00);
+    break;
+    
+    case 7:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x02,0x00);
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x01,0xff);  
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11,0xff);
+    break;
+    
+    case 8:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x02,0xff);
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x01,0x00);  
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11,0x00);
+    break;
+    
+    case 9:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x02,0xff);
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x01,0x00);  
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x10,0x00);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x01,0xff);
+    break;
+    
+    case 10:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x02,0xff);
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x01,0x00);  
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x10,0xff);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x01,0x00);
+    break;
+    
+    case 11:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x02,0xff);
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x01,0x00);  
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11,0xff);
+    break;
+    
+    case 12:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x03,0xff);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11,0x00);
+    break;
+    
+    case 13:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x03,0xff);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x10,0x00);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x01,0xff);
+    break;
+    
+    case 14:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x03,0xff);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x10,0xff);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x01,0x00);
+    break;
+    
+    case 15:
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x03,0xff);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11,0xff);
+    break;
+
+    case 16:
+        c=0;
+    break;
     }
 
     c++;
@@ -244,7 +315,17 @@ void GPIOJ_handler(void) {
 
     if (status & GPIO_PIN_0) {
         
-        FS=FS/2;
+        FS=FS*1.5;
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+        TimerConfigure(TIMER0_BASE,TIMER_CFG_PERIODIC);
+        TimerLoadSet(TIMER0_BASE,TIMER_A,FS);
+        IntMasterEnable();
+        IntEnable(INT_TIMER0A);
+        TimerIntEnable(TIMER0_BASE,TIMER_TIMA_TIMEOUT);
+        TimerEnable(TIMER0_BASE,TIMER_A);
+    }
+    else{
+        FS=3;
         SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
         TimerConfigure(TIMER0_BASE,TIMER_CFG_PERIODIC);
         TimerLoadSet(TIMER0_BASE,TIMER_A,FS);
