@@ -73,7 +73,7 @@ __error__(char *pcFilename, uint32_t ui32Line)
 //
 //*****************************************************************************
 
-uint32_t FS=120000000*1;//1seg
+uint32_t FS=120000000/3;//1seg
 uint32_t FS2=120000000/30;//0.333seg
 uint32_t FS3=120000000/50;//0.005seg
 void timer0A_handler(void);
@@ -315,7 +315,7 @@ void GPIOJ_handler(void) {
 
     if (status & GPIO_PIN_0) {
         
-        FS=FS*1.5;
+        FS=120000000*1.5;
         SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
         TimerConfigure(TIMER0_BASE,TIMER_CFG_PERIODIC);
         TimerLoadSet(TIMER0_BASE,TIMER_A,FS);
@@ -325,7 +325,7 @@ void GPIOJ_handler(void) {
         TimerEnable(TIMER0_BASE,TIMER_A);
     }
     else{
-        FS=3;
+        FS=120000000*3;
         SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
         TimerConfigure(TIMER0_BASE,TIMER_CFG_PERIODIC);
         TimerLoadSet(TIMER0_BASE,TIMER_A,FS);

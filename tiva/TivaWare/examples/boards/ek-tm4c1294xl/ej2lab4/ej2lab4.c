@@ -177,22 +177,22 @@ void timer0A_handler(void){
     switch (c)
     {
     case 1:
-        GPIOPinWrite(GPIO_PORTF_BASE, 0x09, 0x00);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11, 0x00);
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x02);
         break;
     case 2:
-        GPIOPinWrite(GPIO_PORTF_BASE, 0x09, 0x00);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11, 0x00);
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
         break;
 
     case 3:
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
-        GPIOPinWrite(GPIO_PORTF_BASE, 0x09, 0x08);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11, 0x10);
         break;
 
     case 4:
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x00);
-        GPIOPinWrite(GPIO_PORTF_BASE, 0x09, 0x01);
+        GPIOPinWrite(GPIO_PORTF_BASE, 0x11, 0x01);
         break;
 
     case 5:
