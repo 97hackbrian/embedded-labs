@@ -166,12 +166,12 @@ int main(void)
         UARTprintf("CAMBIO");
         FS=120000000/ui32Value;
         SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
-    TimerConfigure(TIMER0_BASE,TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER0_BASE,TIMER_A,FS);
-    IntMasterEnable();
-    IntEnable(INT_TIMER0A);
-    TimerIntEnable(TIMER0_BASE,TIMER_TIMA_TIMEOUT);
-    TimerEnable(TIMER0_BASE,TIMER_A);
+        TimerConfigure(TIMER0_BASE,TIMER_CFG_PERIODIC);
+        TimerLoadSet(TIMER0_BASE,TIMER_A,FS);
+        IntMasterEnable();
+        IntEnable(INT_TIMER0A);
+        TimerIntEnable(TIMER0_BASE,TIMER_TIMA_TIMEOUT);
+        TimerEnable(TIMER0_BASE,TIMER_A);
         
         
     }
