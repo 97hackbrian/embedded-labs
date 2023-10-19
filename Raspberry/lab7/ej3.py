@@ -8,7 +8,7 @@ def rotate_image(image, degrees):
     rotated_image = cv2.warpAffine(image, rotation_matrix, (width, height))
     return rotated_image
 
-image = cv2.imread('conejo2.jpg')  # Replace 'your_image.jpg' with the path to your image
+image = cv2.imread('/home/hackbrian/gitProyects/embedded-labs/Raspberry/lab7/conejo2.jpg')  # Replace 'your_image.jpg' with the path to your image
 
 current_rotation = 0
 
