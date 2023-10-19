@@ -8,5 +8,7 @@
         "stdint.h": "c",
         "stdio.h": "c",
         "stdbool.h": "c"
-    }
+    },
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic"
 }
