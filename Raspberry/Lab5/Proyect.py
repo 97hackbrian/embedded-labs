@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import serial
 import time
 import numpy as np
-
+#hola
 ser=serial.Serial("/dev/ttyACM0",9600,timeout=1)
 ser.reset_input_buffer()
 ser.reset_output_buffer()
