@@ -673,41 +673,61 @@ class Camara(video):
         cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
         
     def DetecColor(self,clase,motor):
-        print("Detect...")
-        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
-        color=""
+        print("Detecting color...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)
+
         while True:
-
             ret, frame = self.capture.read()
-            frame=clase(frame,"RGB")
-            frame.convIMGhsv(0)
-          
-            frame,_,_=frame.split_channels()
-            promedio=int(np.mean(frame))
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            if promedio>47 and promedio<53:
-                color="verde"
-                motor.left(100)
-            elif promedio>87 and promedio<94:
-                color="rojo"
+            # Convertir la imagen a espacio de color HSV
+            frame_hsv = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2HSV)
+
+            # Definir los rangos de color en el espacio HSV
+            lower_red = np.array([110, 100, 100])
+            upper_red = np.array([135, 255, 255])
+            lower_yellow = np.array([49, 100, 100])
+            upper_yellow = np.array([65, 255, 255])
+            lower_green = np.array([69, 100, 100])
+            upper_green = np.array([78, 255, 255])
+
+            # Crear máscaras para los colores
+            mask_red = cv2.inRange(frame_hsv, lower_red, upper_red)
+            mask_yellow = cv2.inRange(frame_hsv, lower_yellow, upper_yellow)
+            mask_green = cv2.inRange(frame_hsv, lower_green, upper_green)
+            h=frame_hsv[:, :, 0]
+            h=int(np.mean(h))
+
+            # Encontrar contornos en las máscaras
+            contours_red, _ = cv2.findContours(mask_red, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            contours_yellow, _ = cv2.findContours(mask_yellow, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            contours_green, _ = cv2.findContours(mask_green, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            color = "N/A"
+
+            if len(contours_red) > 0:
+                color = "Rojo"
                 motor.left(0)
-            elif promedio>57 and promedio<64:
-                color="amarillo"
+            elif len(contours_yellow) > 0:
+                color = "Amarillo"
                 motor.left(25)
-            else:
-                color="none"
+            elif len(contours_green) > 0:
+                color = "Verde"
                 motor.left(0)
 
-            print(promedio,"   color: ",color)
+            print(h,"  Color:", color)
+
             if not ret:
                 print("No se pudo obtener un fotograma de la cámara")
                 break
+
             cv2.imshow(self.camera_window_name, frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
-                print("Pausado y cerrado")
+                print("Paused and closed")
                 break
-        print("Video de cámara finalizado")
-        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
+        print("Camera video finished")
+        cv2.destroyWindow(self.camera_window_name)
 
     def videoStop(self):
         self.capture.release()

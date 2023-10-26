@@ -14,7 +14,7 @@
 
 
 uint8_t switch_case=0;
-uint32_t FS=120000000*2;
+uint32_t FS=120000000*10;
 void timer0A_handler(void);
 #ifdef DEBUG
 void error(char *pcFilename, uint32_t ui32Line)
