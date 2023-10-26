@@ -180,18 +180,22 @@ class img(img_abs):
         return left_half,right_half,upper_half,lower_half
     
     def cutQ(self):
-        # Divide the image into quadrants
-        image=self.imagen.copy()
-        height, width = image.shape
-        quadrant1 = image[:height // 2, :width // 2]
-        quadrant2 = image[:height // 2, width // 2:]
-        quadrant3 = image[height // 2:, :width // 2]
-        quadrant4 = image[height // 2:, width // 2:]
+    # Divide the image into quadrants
+        image = self.imagen.copy()
+        height, width = image.shape[:2]
 
+        if len(image.shape) == 3:  # Si la imagen es a color
+            quadrant1 = image[:height // 2, :width // 2]
+            quadrant2 = image[:height // 2, width // 2:]
+            quadrant3 = image[height // 2:, :width // 2]
+            quadrant4 = image[height // 2:, width // 2:]
+        else:  # Si la imagen es en escala de grises
+            quadrant1 = image[:height // 2, :width // 2]
+            quadrant2 = image[:height // 2, width // 2:]
+            quadrant3 = image[height // 2:, :width // 2]
+            quadrant4 = image[height // 2:, width // 2:]
 
-        return quadrant1,quadrant2,quadrant3,quadrant4
-        #return super().cutQ()
-
+        return quadrant1, quadrant2, quadrant3, quadrant4
 
     def convIMGgray(self,retorno):
         img = cv2.cvtColor(self.imagen, cv2.COLOR_RGB2GRAY)
@@ -422,7 +426,21 @@ class video(video_abc,img):
             return left_halves, right_halves, upper_halves, lower_halves
         else:
             self.frames = [left_halves, right_halves, upper_halves, lower_halves]
+    def quadrants(self, retorno):
+        quadrant1_frames, quadrant2_frames, quadrant3_frames, quadrant4_frames = [], [], [], []
 
+        for frame in self.frames:
+            frame_obj = img(frame, tipo="RGB")
+            quadrant1, quadrant2, quadrant3, quadrant4 = frame_obj.cutQ()
+            quadrant1_frames.append(quadrant1)
+            quadrant2_frames.append(quadrant2)
+            quadrant3_frames.append(quadrant3)
+            quadrant4_frames.append(quadrant4)
+
+        if retorno == 1:
+            return quadrant1_frames, quadrant2_frames, quadrant3_frames, quadrant4_frames
+        else:
+            self.frames = [quadrant1_frames, quadrant2_frames, quadrant3_frames, quadrant4_frames]
     '''
     def videoPlay(self):
         print("Reproduciendo video...")
