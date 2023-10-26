@@ -82,27 +82,33 @@ class img(img_abs):
         return img
     
     def showIMG(self):
-        cv2.imshow('showed',self.imagen) # type: ignore
+        cv2.imshow('showed Instance',self.imagen) # type: ignore
         cv2.waitKey(0)
         cv2.destroyAllWindows()
     
 
 
-    def resize_img(self,width, height):
+    def resize_img(self,width, height,retorno):
         up_points = (width, height)
         img_resize = cv2.resize(self.imagen, up_points) # type: ignore
         print("NewSize",img_resize.shape)
-        self.imagen=img_resize
-        return img_resize
+        if(retorno==1):
+            return img_resize
+        else:
+            self.imagen=img_resize
+        
 
     
-    def rotate_image(self, degrees):
+    def rotate_image(self, degrees,retorno):
         height, width = self.imagen.shape[:2]
         center = (width // 2, height // 2)
         rotation_matrix = cv2.getRotationMatrix2D(center, degrees, 1.0)
         rotated_image = cv2.warpAffine(self.imagen, rotation_matrix, (width, height))
-        self.imagen=rotated_image
-        return rotated_image
+        if(retorno==1):
+            return rotated_image
+        else:
+            self.imagen=rotated_image
+        
 
     def cutHalves(self):
         resized_image=self.imagen
@@ -131,15 +137,22 @@ class img(img_abs):
         #return super().cutQ()
 
 
-    def convIMGgray(self):
+    def convIMGgray(self,retorno):
         img = cv2.cvtColor(self.imagen, cv2.COLOR_RGB2GRAY)
-        self.imagen=img
-        return img
+        
+        if retorno==1:
+            return img
+        else:
+            self.imagen=img
+        
 
-    def convIMGhsv(self):
+    def convIMGhsv(self,retorno):
         img = cv2.cvtColor(self.imagen, cv2.COLOR_RGB2HSV)
-        self.imagen=img
-        return img
+        if retorno==1:
+            return img
+        else:
+            self.imagen=img
+        
     
     def save(self,key):
         if type(key)==str:
@@ -164,11 +177,15 @@ class img(img_abs):
     def retorno(self):
         return self.imagen
     
-    def contours(self,u1,u2,b1,b2):
-        img=self.convIMGgray()
+    def contours(self,u1,u2,b1,b2,retorno):
+        img=self.convIMGgray(1)
         img = cv2.GaussianBlur(self.imagen,(b1,b2),0)
         Canny = cv2.Canny(img, u1, u2)
-        return Canny
+
+        if retorno==1:
+            return Canny
+        else:
+            self.imagen= Canny
 
 
 
