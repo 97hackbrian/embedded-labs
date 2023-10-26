@@ -190,15 +190,19 @@ class img(img_abs):
             self.imagen=img
         
     
-    def save(self,key):
+    def save(self,key,key2):
         if type(key)==str:
             while(1):
                 cv2.imshow("save?",self.imagen)
-                if cv2.waitKey(1) & 0xFF == ord(key):
+                if cv2.waitKey(0) & 0xFF == ord(key):
                     ruta_imagen = f'Raspberry/lab8/Saves/image{self.contador_imagenes}.jpg'
                     cv2.imwrite(ruta_imagen, self.imagen)
                     print(f"Imagen guardada en {ruta_imagen}")
                     self.contador_imagenes += 1
+                    cv2.destroyAllWindows()
+                    break
+                elif cv2.waitKey(0) & 0xFF == ord(key2):
+                    print("Guardado cancelado")
                     cv2.destroyAllWindows()
                     break
                 else:
