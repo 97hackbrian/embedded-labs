@@ -672,6 +672,27 @@ class Camara(video):
         print("Video de cámara finalizado")
         cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
         
+    def DetecColor(self,clase):
+        print("Detect...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            frame=clase(frame,"RGB")
+            frame.convIMGhsv(0)
+          
+            frame,_,_=frame.split_channels()
+            print(np.mean(frame))
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
     def videoStop(self):
         self.capture.release()
 
