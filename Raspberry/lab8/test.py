@@ -1,4 +1,4 @@
-from pixie import img, showIMG
+from pixie import img, showIMG, video, videosPlays
 import cv2
 
 
@@ -36,7 +36,7 @@ Erosion=ImgDilate.apply_erosion(1,1,1)
 showIMG([Erosion,Dilate])
 
 '''
-
+'''
 conejo=img("Raspberry/lab8/images/conejo2.jpg","RGB")
 conejo.showIMG()
 conejo.convIMGgray(0)
@@ -59,4 +59,15 @@ showIMG([m1,m2,m3,m4])
 
 q1,q2,q3,q4=conejo2.cutQ()
 showIMG([q1,q2,q3,q4])
+'''
+video1=video()
+video1.load("Raspberry/lab8/videos/Sunset.mp4")
+#video1.rotate(45,0)
+video1.resize(400,600,0)
+video1.canny(50,140,1,1,0)
+h1,h2,h3,h4 = video1.halves(1) # type: ignore
+videosPlays(video1,[h1,h2,h3,h4])
 
+'''video11=video()
+video11.load(h2)
+video11.videoPlay()'''

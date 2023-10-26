@@ -1,4 +1,5 @@
 import cv2
+from matplotlib.pyplot import prism
 import numpy
 from abc import ABC, abstractmethod
 
@@ -90,7 +91,26 @@ class img_abs(ABC):
     def draw(self):
         pass
 
+class video_abc(ABC):
+    @abstractmethod
+    def load(self):
+        pass
 
+    @abstractmethod
+    def actions(self):
+        pass
+
+    @abstractmethod
+    def videoPlay(self):
+        pass
+
+    @abstractmethod
+    def videoStop(self):
+        pass
+
+    @abstractmethod
+    def retorno(self):
+        pass
 
 
 class img(img_abs):
@@ -100,10 +120,10 @@ class img(img_abs):
             #imagen="/imagenes/perrito1.png"
             self.imagen = cv2.imread(image)
             self.imagen=self.tipos(self.imagen,tipo)
-            print("dir!")
+            #print("dir!")
         #print("OriginalSize",img.shape)
         elif type(image)==numpy.ndarray:
-            print("np!")
+            #print("np!")
             self.imagen=self.tipos(image,tipo)
 
 
@@ -311,4 +331,146 @@ def showIMG(imagenes):
         cv2.imshow(str(c),x) # type: ignore
         c=c+1
     cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+
+
+
+
+import numpy as np
+from multiprocessing import Process
+class video(video_abc,img):
+    def __init__(self) -> None:
+        self.frames=[]
+    def load(self, video_source):
+        if isinstance(video_source, str):
+            # Si se proporciona una cadena (ruta de archivo), cargamos el archivo de video
+            print("Cargando video desde:", video_source)
+            vid = cv2.VideoCapture(video_source)
+            if not vid.isOpened():
+                print("Error al abrir el archivo de video")
+                return
+
+            while True:
+                ret, frame = vid.read()
+                if not ret:
+                    break
+                self.frames.append(frame)
+
+            vid.release()
+            print("Video cargado. Total de frames:", len(self.frames))
+        elif isinstance(video_source, list):
+            # Si se proporciona una lista de frames, usamos esos frames como el video
+            print("Cargando video desde una lista de frames.")
+            self.frames = video_source
+            print("Video cargado. Total de frames:", len(self.frames))
+        else:
+            print("Fuente de video no válida. Debe ser una ruta de archivo o una lista de frames.")
+
+    def actions(self):
+        pass
+
+    def rotate(self,angle, retorno):
+        frames_rotados = []
+        for frame in self.frames:
+            frame_obj = img(frame, tipo="RGB")
+            frame_obj.rotate_image(angle, retorno=0)
+            frames_rotados.append(frame_obj.imagen)
+
+        if retorno==1:
+            return frames_rotados
+        else:
+            self.frames = frames_rotados
+
+    def resize(self,width,height,retorno):
+        frames_resized = []
+        for frame in self.frames:
+            frame_obj = img(frame, tipo="RGB")
+            frame_obj.resize_img(width,height,0)
+            frames_resized.append(frame_obj.imagen)
+        if retorno==1:
+            return frames_resized
+        else:
+            self.frames = frames_resized
+
+    def canny(self,u1,u2,b1,b2,retorno):
+        frames_canny=[]
+        for frame in self.frames:
+            frame_obj = img(frame, tipo="RGB")
+            frame_obj.Cannycontours(u1,u2,b1,b2,0)
+            frames_canny.append(frame_obj.imagen)
+        if retorno==1:
+            return frames_canny
+        else:
+            self.frames = frames_canny
+
+
+    def halves(self, retorno):
+        left_halves, right_halves, upper_halves, lower_halves = [], [], [], []
+        
+        for frame in self.frames:
+            frame_obj = img(frame, tipo="RGB")
+            left_half, right_half, upper_half, lower_half = frame_obj.cutHalves()
+
+            left_halves.append(left_half)
+            right_halves.append(right_half)
+            upper_halves.append(upper_half)
+            lower_halves.append(lower_half)
+
+        if retorno == 1:
+            return left_halves, right_halves, upper_halves, lower_halves
+        else:
+            self.frames = [left_halves, right_halves, upper_halves, lower_halves]
+
+    '''
+    def videoPlay(self):
+        print("Reproduciendo video...")
+        for frame in self.frames:
+            cv2.imshow('Video', frame)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video Finalizado")
+        cv2.destroyAllWindows()
+    '''
+
+    def videoPlay(self):
+        print("Reproduciendo video...")
+        for frame in self.frames:
+            cv2.imshow('Video', frame)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video Finalizado")
+        cv2.destroyAllWindows()
+
+
+    def videoStop(self):
+        pass
+
+    def retorno(self):
+        pass
+
+def videoPlayer(frame, window_name):
+    for frames in frame:
+        cv2.imshow(window_name, frames)
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            break
+
+def videosPlays(self, video_list):
+    processes = []
+
+    for i, video_frames in enumerate(video_list):
+        window_name = f"Video {i+1}"
+        p = Process(target=videoPlayer, args=(video_frames, window_name))
+        p.start()
+        processes.append(p)
+
+    for p in processes:
+        p.join()
+
+    for p in processes:
+        p.terminate()
+
     cv2.destroyAllWindows()
