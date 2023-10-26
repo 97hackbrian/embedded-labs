@@ -654,7 +654,24 @@ class Camara(video):
         cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
 
 
-    
+    def videoCanny(self,clase,u1,u2,b1,b2):
+        print("Canny desde la cámara...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            frame=clase(frame,"RGB")
+            frame.Cannycontours(u1,u2,b1,b2,0)
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame.imagen)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+        
     def videoStop(self):
         self.capture.release()
 
