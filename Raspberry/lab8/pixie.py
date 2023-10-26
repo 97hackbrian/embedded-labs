@@ -164,11 +164,15 @@ class img(img_abs):
     def retorno(self):
         return self.imagen
     
-    def Cannycontours(self,u1,u2,b1,b2):
-        img=self.convIMGgray()
+    def Cannycontours(self,u1,u2,b1,b2,retorno):
+        img=self.convIMGgray(1)
         img = cv2.GaussianBlur(self.imagen,(b1,b2),0)
         Canny = cv2.Canny(img, u1, u2)
-        return Canny
+
+        if retorno==1:
+            return Canny
+        else:
+            self.imagen= Canny
     
     def apply_binary_threshold(self, threshold_value):
         _, binary_threshold = cv2.threshold(self.imagen, threshold_value, 255, cv2.THRESH_BINARY)
