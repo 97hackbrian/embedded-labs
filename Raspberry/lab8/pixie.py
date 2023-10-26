@@ -327,6 +327,16 @@ class img(img_abs):
         else:
             self.imagen=contour_image
 
+    def split_channels(self):
+        if len(self.imagen.shape) == 3:  # Solo para imágenes a color
+            blue_channel = self.imagen[:, :, 0]
+            green_channel = self.imagen[:, :, 1]
+            red_channel = self.imagen[:, :, 2]
+            return blue_channel, green_channel, red_channel
+        else:
+            print("La imagen no es a color. No se pueden dividir los canales.")
+            return None
+
 
 
 def showIMG(imagenes):
@@ -441,6 +451,17 @@ class video(video_abc,img):
             return quadrant1_frames, quadrant2_frames, quadrant3_frames, quadrant4_frames
         else:
             self.frames = [quadrant1_frames, quadrant2_frames, quadrant3_frames, quadrant4_frames]
+    
+    
+    def change_to_color_channels(self):
+        frames_color_channels = []
+        for frame in self.frames:
+            frame_obj = img(frame, tipo="RGB")
+            _, green_channel, red_channel = frame_obj.split_channels()  # Obtenemos los canales de color
+            frame_color = cv2.merge((blue_channel, green_channel, red_channel))  # Combinamos los canales
+            frames_color_channels.append(frame_color)
+        return frames_color_channels
+
     '''
     def videoPlay(self):
         print("Reproduciendo video...")
@@ -492,3 +513,58 @@ def videosPlays(self, video_list):
         p.terminate()
 
     cv2.destroyAllWindows()
+
+
+
+class Camara(video):
+    def __init__(self, cam_source=0) -> None:
+        super().__init__()
+        self.cam_source = cam_source
+        self.capture = cv2.VideoCapture(cam_source)
+        if not self.capture.isOpened():
+            print("Error al abrir la cámara")
+        self.camera_window_name = "Cámara"
+
+    def load(self):
+        pass  # La cámara se carga en el constructor, no es necesario cargarla de nuevo
+
+    def actions(self):
+        pass  # Puedes agregar acciones específicas de la cámara aquí si es necesario
+
+    def videoPlay(self,canal):
+        print("Reproduciendo desde la cámara...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
+    def change_to_color_channel(self, channel='RGB'):
+        frames_color_channel = []
+        for frame in self.frames:
+            frame_obj = img(frame, tipo="RGB")
+            if channel == 'RGB':
+                frame_color_channel = frame  # Mostrar el canal RGB original
+            elif channel == 'Red':
+                _, _, frame_color_channel = frame_obj.split_channels()  # Mostrar solo el canal Rojo
+            elif channel == 'Green':
+                _, frame_color_channel, _ = frame_obj.split_channels()  # Mostrar solo el canal Verde
+            elif channel == 'Blue':
+                frame_color_channel, _, _ = frame_obj.split_channels()  # Mostrar solo el canal Azul
+            frames_color_channel.append(frame_color_channel)
+        self.capture=frames_color_channel
+        return frames_color_channel
+    
+    def videoStop(self):
+        self.capture.release()
+
+    def retorno(self):
+        pass  # Puedes agregar la lógica de retorno específica de la cámara aquí si es necesario
