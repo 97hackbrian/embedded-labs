@@ -133,6 +133,8 @@ class img(img_abs):
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) # type: ignore
         elif(tipo=="HSV"):
             img = cv2.cvtColor(img, cv2.COLOR_HSV2RGB) # type: ignore
+        elif(tipo=="GRAY"):
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # type: ignore
         elif(tipo=="RGB"):
             pass
         return img
@@ -214,29 +216,56 @@ class img(img_abs):
             self.imagen=img
         
     
-    def save(self,key,key2):
-        if type(key)==str:
-            while(1):
-                cv2.imshow("save?",self.imagen)
-                if cv2.waitKey(0) & 0xFF == ord(key):
-                    ruta_imagen = f'Raspberry/lab8/Saves/image{self.contador_imagenes}.jpg'
-                    cv2.imwrite(ruta_imagen, self.imagen)
-                    print(f"Imagen guardada en {ruta_imagen}")
-                    self.contador_imagenes += 1
-                    cv2.destroyAllWindows()
-                    break
-                elif cv2.waitKey(0) & 0xFF == ord(key2):
-                    print("Guardado cancelado")
-                    cv2.destroyAllWindows()
-                    break
-                else:
-                    print("No key")
+    def save(self,key,key2,same,every):
+        if same ==0:
+            if type(key)==str:
+                while(1):
+                    cv2.imshow("save?",self.imagen)
+                    if cv2.waitKey(0) & 0xFF == ord(key):
+                        ruta_imagen = f'Raspberry/lab8/Saves/image{self.contador_imagenes}.jpg'
+                        cv2.imwrite(ruta_imagen, self.imagen)
+                        print(f"Imagen guardada en {ruta_imagen}")
+                        self.contador_imagenes += 1
+                        cv2.destroyAllWindows()
+                        break
+                    elif cv2.waitKey(0) & 0xFF == ord(key2):
+                        print("Guardado cancelado")
+                        cv2.destroyAllWindows()
+                        break
+                    else:
+                        print("No key")
 
-        elif(key==0):
-            ruta_imagen = f'Raspberry/lab8/Saves/image{self.contador_imagenes}.jpg'
-            cv2.imwrite(ruta_imagen, self.imagen)
-            print(f"Imagen guardada en {ruta_imagen}")
-            self.contador_imagenes += 1
+            elif(key==0):
+                ruta_imagen = f'Raspberry/lab8/Saves/image{self.contador_imagenes}.jpg'
+                cv2.imwrite(ruta_imagen, self.imagen)
+                print(f"Imagen guardada en {ruta_imagen}")
+                self.contador_imagenes += 1
+        else:
+            if type(key)==str:
+                while(1):
+                    #cv2.imshow("save?",self.imagen)
+                    if every==1:
+                        ruta_imagen = f'Raspberry/lab8/Saves/image1.jpg'
+                        cv2.imwrite(ruta_imagen, self.imagen)
+                    else:
+                        if cv2.waitKey(0) & 0xFF == ord(key) :
+                            ruta_imagen = f'Raspberry/lab8/Saves/image1.jpg'
+                            cv2.imwrite(ruta_imagen, self.imagen)
+                            print(f"Imagen guardada en {ruta_imagen}")
+                            self.contador_imagenes += 1
+                            cv2.destroyAllWindows()
+                            break
+                        
+                        else:
+                            
+                            print("No key")
+
+            elif(key==0):
+                print("aqui")
+                ruta_imagen = f'Raspberry/lab8/Saves/image1.jpg'
+                cv2.imwrite(ruta_imagen, self.imagen)
+                print(f"Imagen guardada en {ruta_imagen}")
+                self.contador_imagenes += 1
 
     def retorno(self):
         return self.imagen
@@ -531,12 +560,54 @@ class Camara(video):
     def actions(self):
         pass  # Puedes agregar acciones específicas de la cámara aquí si es necesario
 
-    def videoPlay(self,canal):
+    def videoPlay(self):
         print("Reproduciendo desde la cámara...")
         cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
         while True:
 
             ret, frame = self.capture.read()
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
+    def videoRotate(self,clase,angle,color):
+        print("Reproduciendo desde la cámara...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            frame=clase(frame,color)
+            frame.rotate_image(angle,0)
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame.imagen)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
+
+    def videoColor(self,clase,scale,canal):
+        print("Reproduciendo desde la cámara...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            frame=clase(frame,scale)
+            if canal==1:
+                frame,_,_=frame.split_channels()
+            elif canal==2:
+                _,frame,_=frame.split_channels()
+            elif canal==3:
+                _,_,frame=frame.split_channels()
             if not ret:
                 print("No se pudo obtener un fotograma de la cámara")
                 break
@@ -562,6 +633,27 @@ class Camara(video):
             frames_color_channel.append(frame_color_channel)
         self.capture=frames_color_channel
         return frames_color_channel
+    
+    def saveCameracapture(self,clase,key,every):
+        print("Esperando a guardar")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            frame=clase(frame,"RGB")
+            frame.save(key,"q",1,every)
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow("self.camera_window_name", frame.imagen)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+            
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
+
     
     def videoStop(self):
         self.capture.release()
