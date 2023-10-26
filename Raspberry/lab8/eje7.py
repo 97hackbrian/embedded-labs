@@ -1,7 +1,7 @@
 from pixie import Camara, img, showIMG, video, videosPlays
-#import RPi.GPIO as GPIO
-#GPIO.setwarnings(False)
-#GPIO.setmode(GPIO.BCM)
+import RPi.GPIO as GPIO
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
 
 IN1=27
 IN2=22
@@ -52,9 +52,9 @@ class MotorController():
             self.pwmb.ChangeDutyCycle(vel2*-1)
 
 
-#motors=MotorController(IN1,IN2,PWMA,IN3,IN4,PWMB)
+motors=MotorController(IN1,IN2,PWMA,IN3,IN4,PWMB)
 
 if __name__ == "__main__":
     camara=Camara(0)
 
-    camara.DetecColor(img)
+    camara.DetecColor(img,motors)

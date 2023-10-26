@@ -672,9 +672,10 @@ class Camara(video):
         print("Video de cámara finalizado")
         cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
         
-    def DetecColor(self,clase):
+    def DetecColor(self,clase,motor):
         print("Detect...")
         cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        color=""
         while True:
 
             ret, frame = self.capture.read()
@@ -682,7 +683,22 @@ class Camara(video):
             frame.convIMGhsv(0)
           
             frame,_,_=frame.split_channels()
-            print(np.mean(frame))
+            promedio=int(np.mean(frame))
+
+            if promedio>47 and promedio<53:
+                color="verde"
+                motor.left(100)
+            elif promedio>87 and promedio<94:
+                color="rojo"
+                motor.left(0)
+            elif promedio>57 and promedio<64:
+                color="amarillo"
+                motor.left(25)
+            else:
+                color="none"
+                motor.left(0)
+
+            print(promedio,"   color: ",color)
             if not ret:
                 print("No se pudo obtener un fotograma de la cámara")
                 break
