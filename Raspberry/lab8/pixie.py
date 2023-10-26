@@ -51,7 +51,7 @@ class img_abs(ABC):
         pass
     
     @abstractmethod
-    def contours(self):
+    def Cannycontours(self):
         pass
 
 
@@ -164,11 +164,58 @@ class img(img_abs):
     def retorno(self):
         return self.imagen
     
-    def contours(self,u1,u2,b1,b2):
+    def Cannycontours(self,u1,u2,b1,b2):
         img=self.convIMGgray()
         img = cv2.GaussianBlur(self.imagen,(b1,b2),0)
         Canny = cv2.Canny(img, u1, u2)
         return Canny
+    
+    def apply_binary_threshold(self, threshold_value):
+        _, binary_threshold = cv2.threshold(self.imagen, threshold_value, 255, cv2.THRESH_BINARY)
+        return binary_threshold
+    
+    def apply_otsu_threshold(self, threshold_value):
+        _, otsu_threshold = cv2.threshold(self.imagen, threshold_value, 255, cv2.THRESH_OTSU)
+        return otsu_threshold
+
+    def apply_inverse_binary_threshold(self, threshold_value):
+        _, inverse_binary_threshold = cv2.threshold(self.imagen, threshold_value, 255, cv2.THRESH_BINARY_INV)
+        return inverse_binary_threshold
+
+    def apply_truncated_threshold(self, threshold_value):
+        _, truncated_threshold = cv2.threshold(self.imagen, threshold_value, 255, cv2.THRESH_TRUNC)
+        return truncated_threshold
+
+    def apply_tozero_threshold(self, threshold_value):
+        _, tozero_threshold = cv2.threshold(self.imagen, threshold_value, 255, cv2.THRESH_TOZERO)
+        return tozero_threshold
+
+    def apply_inverse_tozero_threshold(self, threshold_value):
+        _, inverse_tozero_threshold = cv2.threshold(self.imagen, threshold_value, 255, cv2.THRESH_TOZERO_INV)
+        return inverse_tozero_threshold
+
+    def apply_erosion(self, threshold_value, erosion_iterations):
+        binary_threshold = self.apply_binary_threshold(threshold_value)
+        kernel = np.ones((2, 2), np.uint8)
+        erosion = cv2.erode(binary_threshold, kernel, iterations=erosion_iterations)
+        return erosion
+
+    def apply_dilation(self, threshold_value, dilation_iterations):
+        binary_threshold = self.apply_binary_threshold(threshold_value)
+        kernel = np.ones((2, 2), np.uint8)
+        dilation = cv2.dilate(binary_threshold, kernel, iterations=dilation_iterations)
+        return dilation
+    
+
+    def draw(self,val):
+        contour_image = self.imagen.copy()
+        self.convIMGgray()
+        contours, _ = cv2.findContours(self.apply_otsu_threshold(val), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+
+        
+
+        cv2.drawContours(contour_image, contours, -1, (0, 0, 255), 1) 
+        return contour_image
 
 
 

@@ -2,13 +2,33 @@ from pixie import img, showIMG
 import cv2
 
 
+
+
+trafic= img("Raspberry/lab8/images/city.png","RGB")
+
+trafic.resize_img(1000,700)
+
+showIMG([trafic.retorno(),trafic.draw(1)])
+
+
+#showIMG([trafic.apply_otsu_threshold(255)])
+
+'''
 trafic= img("Raspberry/lab8/images/city.png","RGB")
 trafic.showIMG()
 trafic.resize_img(900,600)
 trafic.showIMG()
-contours=trafic.contours(60,130,1,1)
+contours=trafic.Cannycontours(60,130,1,1)
 showIMG([contours,trafic.retorno()])
-'''
+imagenContours=img(contours,"RGB")
+imagenContours.showIMG()
+Dilate=imagenContours.apply_dilation(1,1)
+
+ImgDilate=img(Dilate,"RGB")
+Erosion=ImgDilate.apply_erosion(1,1)
+showIMG([Erosion,Dilate])
+
+
 
 conejo=img("Raspberry/lab8/images/conejo2.jpg","RGB")
 conejo.showIMG()
