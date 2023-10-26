@@ -261,7 +261,7 @@ class img(img_abs):
                             print("No key")
 
             elif(key==0):
-                print("aqui")
+                #print("aqui")
                 ruta_imagen = f'Raspberry/lab8/Saves/image1.jpg'
                 cv2.imwrite(ruta_imagen, self.imagen)
                 print(f"Imagen guardada en {ruta_imagen}")
