@@ -52,6 +52,43 @@ class img_abs(ABC):
     @abstractmethod
     def Cannycontours(self):
         pass
+    
+    @abstractmethod
+    def apply_binary_threshold(self):
+        pass
+
+    @abstractmethod
+    def apply_otsu_threshold(self):
+        pass
+
+    @abstractmethod
+    def apply_inverse_binary_threshold(self):
+        pass
+
+    @abstractmethod
+    def apply_truncated_threshold(self):
+        pass
+
+    @abstractmethod
+    def apply_tozero_threshold(self):
+        pass
+
+
+    @abstractmethod
+    def apply_inverse_tozero_threshold(self):
+        pass
+
+    @abstractmethod
+    def apply_erosion(self):
+        pass
+
+    @abstractmethod
+    def apply_dilation(self):
+        pass
+
+    @abstractmethod
+    def draw(self):
+        pass
 
 
 
