@@ -46,21 +46,21 @@ class video():
                 self.stop_display()
 
             foreground_mask = self.background_subtractor.apply(frame)
-            _, thresh = cv2.threshold(foreground_mask, 244, 255, cv2.THRESH_BINARY)
+            _, thresh = cv2.threshold(foreground_mask, 0, 255, cv2.THRESH_BINARY)
             processed_foreground = self.preprocess_foreground(thresh)
 
             contours, _ = cv2.findContours(processed_foreground, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            cv2.drawContours(frame, contours, -1, (255, 255, 255), 2)  # Cambia a (0, 0, 0) para negro
+            cv2.drawContours(frame, contours, -1, (255, 0, 0), 2)  
             num_objects = self.count_objects(contours)
             if num_objects > 0:
-                if num_objects == 1:
+                if num_objects >= 1 and num_objects<=10:
                     serial.write("2\n".encode())
-                    print("ONE")
+                    print("UNO")
                 else :
                     serial.write("4\n".encode())
-                    print("MORE")
+                    print("MAS DE UNO")
             else:
-                print("No Move")
+                print("SIN MOVIMIENTO")
                 serial.write("0\n".encode())
 
             cv2.imshow("Processed Foreground", processed_foreground)

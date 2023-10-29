@@ -35,8 +35,8 @@ void timer0A_handler(void);
 void timer1A_handler(void);
 int state=0;
 int state2=0;
-uint32_t FS = 120000000/300; //frecuencia del timer
-uint32_t FS2 = 120000000*1; 
+uint32_t FS = 120000000/900; //frecuencia del timer
+uint32_t FS2 = 120000000/1500;
 int flag=0;
 int flag2=0;
 char data[7];
