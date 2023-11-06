@@ -87,10 +87,10 @@ int main(void)
     
 
     GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, 0x03);
-    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, 0x15);
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, 0x11);
 
     GPIOPinTypeGPIOOutput(GPIO_PORTG_BASE, 0x01);//PG0 PWMB
-    GPIOPinTypeGPIOOutput(GPIO_PORTK_BASE, 0xFF);//PK4,PK5,PK6,PK7
+    GPIOPinTypeGPIOOutput(GPIO_PORTK_BASE, 0xF0);//PK4,PK5,PK6,PK7
 
     // configuracion uart
     UARTStdioConfig(0,9600,120000000);
@@ -120,10 +120,10 @@ int main(void)
 
 
     while(1){
-
+        GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         //UARTgets(data,10);
         width=200;
-        GPIOPinWrite(GPIO_PORTK_BASE, 0xFF, 0x10);
+        GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0x80);
         PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
 
         /*
