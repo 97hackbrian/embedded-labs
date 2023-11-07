@@ -111,10 +111,10 @@ int main(void)
 
     PWMGenConfigure(PWM0_BASE,PWM_GEN_1,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
     PWMGenConfigure(PWM0_BASE,PWM_GEN_2,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
-    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_1,500);
-    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_2,500);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_1,100);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_2,100);
 
-    width=300;
+    width=100;
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,width);
 
@@ -130,8 +130,8 @@ int main(void)
     while(1){
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         //UARTgets(data,10);
-        width=600;
-        GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);//PF7 y PF5(adelante) //0x50 PF4 y PF6(atras)
+        width=89;
+        GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);//PF7 y PF5(adelante)0xA0 //0x50 PF4 y PF6(atras)0x50
         PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
         PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,width);
 
