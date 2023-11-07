@@ -20,3 +20,4 @@ if __name__ == "__main__":
     sleep(5)
     motors.move(-100,100)
     sleep(3)
+    motors.stop()
