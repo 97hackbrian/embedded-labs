@@ -38,10 +38,10 @@ __error__(char *pcFilename, uint32_t ui32Line)
 
 void timer0A_handler(void);
 int state=0;
-uint32_t FS = 120000000/1; //frecuencia del timer
+uint32_t FS = 120000000/100; //frecuencia del timer
 int flagMotor=0;
 char data[15];
-char comand[10];
+char comand[7];
 
 int main(void)
 {
@@ -132,15 +132,17 @@ int main(void)
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         UARTgets(data,15);
         strcpy(comand, strtok(data, ","));
-
+        UARTprintf(comand);
         
 
         if(strcmp(comand, "motor")==0){
             flagMotor=1;
+            GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
 
         }
         else{
             flagMotor=0;
+            GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         }
         //width=65;
         //GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);//PF7 y PF5(adelante)0xA0 //0x50 PF4 y PF6(atras)0x50
