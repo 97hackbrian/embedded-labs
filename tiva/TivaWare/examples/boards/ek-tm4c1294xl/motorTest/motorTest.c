@@ -89,7 +89,7 @@ int main(void)
     GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, 0x03);
     GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, 0x11);
 
-    GPIOPinTypeGPIOOutput(GPIO_PORTG_BASE, 0x01);//PG0 PWMB
+    //GPIOPinTypeGPIOOutput(GPIO_PORTG_BASE, 0x01);//PG0 PWMB
     GPIOPinTypeGPIOOutput(GPIO_PORTK_BASE, 0xF0);//PK4,PK5,PK6,PK7
 
     // configuracion uart
@@ -104,17 +104,25 @@ int main(void)
 
     //pwm
     GPIOPinConfigure(GPIO_PF2_M0PWM2);
+    GPIOPinConfigure(GPIO_PG0_M0PWM4);
+
     GPIOPinTypePWM(GPIO_PORTF_BASE,GPIO_PIN_2);
+    GPIOPinTypePWM(GPIO_PORTG_BASE,GPIO_PIN_0);
 
     PWMGenConfigure(PWM0_BASE,PWM_GEN_1,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
-    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_1,400);
+    PWMGenConfigure(PWM0_BASE,PWM_GEN_2,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_1,500);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_2,500);
 
     width=300;
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
+    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,width);
 
-    PWMGenEnable(PWM0_BASE,PWM_GEN_1);    
+    PWMGenEnable(PWM0_BASE,PWM_GEN_1);
+    PWMGenEnable(PWM0_BASE,PWM_GEN_2);    
     
     PWMOutputState(PWM0_BASE,(PWM_OUT_2_BIT),true);
+    PWMOutputState(PWM0_BASE,(PWM_OUT_4_BIT),true);
 
 
 
@@ -123,8 +131,9 @@ int main(void)
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         //UARTgets(data,10);
         width=600;
-        GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);
+        GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);//PF7 y PF5(adelante) //0x50 PF4 y PF6(atras)
         PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
+        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,width);
 
         /*
         SysCtlDelay(15000000);
