@@ -5,8 +5,8 @@ from libs.tiva import *
 from pynput.keyboard import Key, Listener
 
 # Define the initial velocities
-left_velocity = 50
-right_velocity = 50
+left_velocity = 0
+right_velocity = 0
 
 # Function to update motor velocities and LED control
 def update_motors_and_leds():
@@ -17,17 +17,17 @@ def update_motors_and_leds():
 def on_key_press(key):
     global left_velocity, right_velocity
     if key == Key.up:
-        left_velocity = 60
-        right_velocity = 60
+        left_velocity = 70
+        right_velocity = 70
     elif key == Key.down:
         left_velocity = -60
         right_velocity = -60
     elif key == Key.left:
-        left_velocity = -60
-        right_velocity = 60
+        left_velocity = -80
+        right_velocity = 80
     elif key == Key.right:
-        left_velocity = 60
-        right_velocity = -60
+        left_velocity = 70
+        right_velocity = -70
     update_motors_and_leds()
 
 # Function to handle key releases
