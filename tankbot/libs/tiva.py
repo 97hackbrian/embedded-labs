@@ -42,8 +42,8 @@ class LedControl:
 
     def write(self, l1, l2, l3, l4):
         # Verifica si los valores son booleanos
-        if not all(isinstance(val, bool) for val in (l1, l2, l3, l4)):
-            raise ValueError("Los valores deben ser booleanos")
+        #if not all(isinstance(val, bool) for val in (l1, l2, l3, l4)):
+        #    raise ValueError("Los valores deben ser booleanos")
         self.ser.send_data(f"leds", l1, l2, l3, l4)
 
     def init_system(self,cam=0):
@@ -52,7 +52,7 @@ class LedControl:
         for sequence in sequences:
             try:
                 self.write(*sequence)
-                if self.ser.is_open:
+                if self.ser.ser.is_open:
                     print(".", end="", flush=True)  # Establece end="" para evitar el salto de línea
                 if cam != 0:
                     if cam.is_open():  # Comprueba si la cámara está abierta

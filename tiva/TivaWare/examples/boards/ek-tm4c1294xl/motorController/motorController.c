@@ -37,12 +37,16 @@ __error__(char *pcFilename, uint32_t ui32Line)
 
 
 void timer0A_handler(void);
+void timer1A_handler(void);
 int state=0;
 uint32_t FS = 120000000/100; //frecuencia del timer
+uint32_t FS2 = 120000000/100; //frecuencia del timer
 int flagMotor=0;
+int flagLeds=0;
 char data[15];
 char comand[7];
 int vel[2];
+int leds[4];
 
 int main(void)
 {
@@ -64,6 +68,7 @@ int main(void)
 
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
     
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
 
@@ -73,6 +78,15 @@ int main(void)
     IntEnable(INT_TIMER0A);
     TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);   
     TimerEnable(TIMER0_BASE, TIMER_A);
+    IntMasterEnable();
+
+
+    //configuracion timer 1
+    TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC);
+    TimerLoadSet(TIMER1_BASE, TIMER_A, FS2);
+    IntEnable(INT_TIMER1A);
+    TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);   
+    TimerEnable(TIMER1_BASE, TIMER_A);
     IntMasterEnable();
    
 
@@ -130,7 +144,7 @@ int main(void)
 
 
     while(1){
-        GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
+        //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         UARTgets(data,15);
         strcpy(comand, strtok(data, ","));
         //UARTprintf(comand);
@@ -140,16 +154,16 @@ int main(void)
             char *token = strtok(NULL, ",");
             if (token != NULL)
             {
-                UARTprintf(token);
+                //UARTprintf(token);
                 vel[0] = atoi(token);
                 token = strtok(NULL, ",");
                 if (token != NULL)
                 {
-                    UARTprintf(token);
+                    //UARTprintf(token);
                     vel[1] = atoi(token);
                 }
                 flagMotor = 1;
-                GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
+                //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
             }
             
             
@@ -157,8 +171,45 @@ int main(void)
         }
         else{
             flagMotor=0;
-            GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
+            //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         }
+
+        if(strcmp(comand, "leds")==0){
+            char *token = strtok(NULL, ",");
+            if (token != NULL)
+            {
+                UARTprintf(token);
+                leds[0] = atoi(token);
+                token = strtok(NULL, ",");
+                if (token != NULL)
+                {
+                    UARTprintf(token);
+                    leds[1] = atoi(token);
+                    token = strtok(NULL, ",");
+                    if (token != NULL)
+                    {
+                        UARTprintf(token);
+                        leds[2] = atoi(token);
+                        token = strtok(NULL, ",");
+                        if (token != NULL)
+                        {
+                            UARTprintf(token);
+                            leds[3] = atoi(token);
+                        }
+                    }
+                }
+                flagMotor = 1;
+                //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
+            }
+            
+            
+
+        }
+        else{
+            flagLeds=0;
+            //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
+        }
+
         //width=65;
         //GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);//PF7 y PF5(adelante)0xA0 //0x50 PF4 y PF6(atras)0x50
         //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
@@ -223,3 +274,32 @@ void timer0A_handler(void)
 
 
 
+
+void timer1A_handler(void){ 
+   TimerIntClear(TIMER1_BASE, TIMER_A);
+   if (leds[0]==1){
+    GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x02);
+   }
+   else{
+    GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x00);
+   }
+   if (leds[1]==1){
+    GPIOPinWrite(GPIO_PORTN_BASE, 0x01, 0x01);
+   }
+   else{
+    GPIOPinWrite(GPIO_PORTN_BASE, 0x01, 0x00);
+   }
+   if (leds[2]==1){
+    GPIOPinWrite(GPIO_PORTF_BASE, 0x10, 0x10);
+   }
+   else{
+    GPIOPinWrite(GPIO_PORTF_BASE, 0x10, 0x00);
+   }
+   if (leds[3]==1){
+    GPIOPinWrite(GPIO_PORTF_BASE, 0x01, 0x01);
+   }
+   else{
+    GPIOPinWrite(GPIO_PORTF_BASE, 0x01, 0x00);
+   }
+   
+}

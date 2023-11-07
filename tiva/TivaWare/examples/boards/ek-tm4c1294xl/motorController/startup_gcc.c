@@ -44,6 +44,7 @@ static void IntDefaultHandler(void);
 extern int main(void);
 //
 extern void timer0A_handler(void);
+extern void timer1A_handler(void);
 //*****************************************************************************
 //
 // Reserve space for the system stack.
@@ -98,7 +99,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // Watchdog timer
     timer0A_handler,                      // Timer 0 subtimer A
     IntDefaultHandler,                      // Timer 0 subtimer B
-    IntDefaultHandler,                      // Timer 1 subtimer A
+    timer1A_handler,                      // Timer 1 subtimer A
     IntDefaultHandler,                      // Timer 1 subtimer B
     IntDefaultHandler,                      // Timer 2 subtimer A
     IntDefaultHandler,                      // Timer 2 subtimer B
