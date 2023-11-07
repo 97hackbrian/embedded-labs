@@ -106,13 +106,13 @@ int main(void)
     GPIOPinConfigure(GPIO_PF2_M0PWM2);
     GPIOPinTypePWM(GPIO_PORTF_BASE,GPIO_PIN_2);
 
-    PWMGenConfigure(PWM0_BASE,PWM_GEN_0,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
-    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_0,400);
+    PWMGenConfigure(PWM0_BASE,PWM_GEN_1,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_1,400);
 
     width=300;
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
 
-    PWMGenEnable(PWM0_BASE,PWM_GEN_0);    
+    PWMGenEnable(PWM0_BASE,PWM_GEN_1);    
     
     PWMOutputState(PWM0_BASE,(PWM_OUT_2_BIT),true);
 
