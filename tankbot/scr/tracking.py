@@ -6,15 +6,20 @@ from libs.tiva import *
 from libs.pixie import *
 size_camera=500
 if __name__ == "__main__":
-    camara=Camara(max_attempts=5)
+    camara=Camara(0)
     tiva=InitSerial(baud=9600)
     motors=Motors(serial_instance=tiva)
     leds=LedControl(serial_instance=tiva)
-    leds.init_system(cam=1)
+    leds.init_system(cam=0)
     pos=[]
+    camara.track()
+    #camara.videoCanny(img,10,50,3,3)
+    #camara.videoPlay()
+    '''
+    pos,ref=camara.track()
     while True:
         
-        pos,ref=camara.track()
+        
         posx=pos[0]
         posy=pos[1]
         print("x: ",posx,"  y: ",posy,"  ref: ",ref)
@@ -27,3 +32,4 @@ if __name__ == "__main__":
                 motors.move(60,-60)
         else:
             motors.stop()
+'''

@@ -149,7 +149,7 @@ class img(img_abs):
     def resize_img(self,width, height,retorno):
         up_points = (width, height)
         img_resize = cv2.resize(self.imagen, up_points) # type: ignore
-        print("NewSize",img_resize.shape)
+        #print("NewSize",img_resize.shape)
         if(retorno==1):
             return img_resize
         else:
@@ -546,39 +546,25 @@ def videosPlays(self, video_list):
 
 
 class Camara:
-    def __init__(self, max_attempts=10):
-        self.capture = None
+    def __init__(self, cam_source=0) -> None:
+        super().__init__()
+        self.cam_source = cam_source
+        self.capture = cv2.VideoCapture(cam_source)
+        if not self.capture.isOpened():
+            print("Error al abrir la cámara")
         self.camera_window_name = "Cámara"
-        self.cam_source = None
-
-        # Intentar abrir la cámara automáticamente
-        for cam_source in range(max_attempts):
-            try:
-                self.capture = cv2.VideoCapture(cam_source)
-                if self.capture.isOpened():
-                    self.cam_source = cam_source
-                    print(f"Camara encontrada en el fuente {cam_source}")
-                    break
-            except Exception as e:
-                print(f"Error al abrir la cámara en el fuente {cam_source}: {e}")
-
-        if self.capture is None or not self.capture.isOpened():
-            print("No se pudo abrir la cámara.")
-
-    def is_open(self):
-        return self.capture is not None and self.capture.isOpened()
 
     def load(self):
-        return self.is_open()
+        pass  # La cámara se carga en el constructor, no es necesario cargarla de nuevo
+
+    def actions(self):
+        pass  # Puedes agregar acciones específicas de la cámara aquí si es necesario
 
     def videoPlay(self):
-        if not self.is_open():
-            print("La cámara no se ha cargado correctamente.")
-            return
-
-        print(f"Reproduciendo desde la cámara {self.cam_source}...")
+        print("Reproduciendo desde la cámara...")
         cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
         while True:
+
             ret, frame = self.capture.read()
             if not ret:
                 print("No se pudo obtener un fotograma de la cámara")
@@ -590,64 +576,190 @@ class Camara:
         print("Video de cámara finalizado")
         cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
 
-    def videoStop(self):
-        if self.is_open():
-            self.capture.release()
+    def videoRotate(self,clase,angle,color):
+        print("Reproduciendo desde la cámara...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
 
-    def track(self):
+            ret, frame = self.capture.read()
+            frame=clase(frame,color)
+            frame.rotate_image(angle,0)
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame.imagen)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
+
+    def videoColor(self,clase,scale,canal):
+        print("Reproduciendo desde la cámara...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            frame=clase(frame,scale)
+            if canal==1:
+                frame,_,_=frame.split_channels()
+            elif canal==2:
+                _,frame,_=frame.split_channels()
+            elif canal==3:
+                _,_,frame=frame.split_channels()
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
+    def change_to_color_channel(self, channel='RGB'):
+        frames_color_channel = []
+        for frame in self.frames:
+            frame_obj = img(frame, tipo="RGB")
+            if channel == 'RGB':
+                frame_color_channel = frame  # Mostrar el canal RGB original
+            elif channel == 'Red':
+                _, _, frame_color_channel = frame_obj.split_channels()  # Mostrar solo el canal Rojo
+            elif channel == 'Green':
+                _, frame_color_channel, _ = frame_obj.split_channels()  # Mostrar solo el canal Verde
+            elif channel == 'Blue':
+                frame_color_channel, _, _ = frame_obj.split_channels()  # Mostrar solo el canal Azul
+            frames_color_channel.append(frame_color_channel)
+        self.capture=frames_color_channel
+        return frames_color_channel
+    
+    def saveCameracapture(self,clase,key,every):
+        print("Esperando a guardar")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            frame=clase(frame,"RGB")
+            frame.save(key,"q",1,every)
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow("self.camera_window_name", frame.imagen)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+            
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+
+
+    def videoCanny(self,clase,u1,u2,b1,b2):
+        print("Canny desde la cámara...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)  # Crea una ventana
+        while True:
+
+            ret, frame = self.capture.read()
+            frame=clase(frame,"RGB")
+            frame.Cannycontours(u1,u2,b1,b2,0)
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame.imagen)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Pausado y cerrado")
+                break
+        print("Video de cámara finalizado")
+        cv2.destroyWindow(self.camera_window_name)  # Cierra la ventana al final
+        
+
+    def DetecColor(self,clase,motor):
+        print("Detecting color...")
+        cv2.namedWindow(self.camera_window_name, cv2.WINDOW_NORMAL)
+        while True:
+            ret, frame = self.capture.read()
+            frame_rgb=clase(frame,"BGR")
+            frame_hsv=frame_rgb.convIMGhsv(1)
+
+            h=frame_hsv[:, :, 0]
+            h=int(np.mean(h))
+
+            color = "N/A"
+
+            if h >= 100:
+                color = "Rojo"
+                motor.left(0)
+            elif h > 40 and h<65:
+                color = "Amarillo"
+                motor.left(25)
+            elif h >= 65 and h<100:
+                color = "Verde"
+                motor.left(100)
+            print(h,"  Color:", color)
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+            cv2.imshow(self.camera_window_name, frame)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Paused and closed")
+                break
+        print("Camera video finished")
+        cv2.destroyWindow(self.camera_window_name)
+
+    def videoStop(self):
+        self.capture.release()
+
+    def is_open(self):
+        return self.capture is not None and self.capture.isOpened()
+
+    def track(self):###aqui###
         if not self.is_open():
             print("La cámara no se ha cargado correctamente.")
-            return None, False
+            return
 
-        print(f"Realizando seguimiento de movimiento desde la cámara {self.cam_source}...")
+        #serial = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
+        #serial.reset_input_buffer()
+        #serial.reset_output_buffer()
 
-        background = None
-        object_detected = False
-        object_position = None
+        background_subtractor = cv2.createBackgroundSubtractorMOG2()
 
         while True:
             ret, frame = self.capture.read()
+            frame2=img(frame,"RGB")
+            frame=frame2.resize_img(500,300,1)
             if not ret:
                 print("No se pudo obtener un fotograma de la cámara")
                 break
 
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            gray = cv2.GaussianBlur(gray, (21, 21), 0)
+            foreground_mask = background_subtractor.apply(frame)
+            _, thresh = cv2.threshold(foreground_mask, 200, 255, cv2.THRESH_BINARY)
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (20, 20))
+            processed_foreground = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
 
-            if background is None:
-                background = gray
-                continue
+            contours, _ = cv2.findContours(processed_foreground, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            cv2.drawContours(frame, contours, -1, (255, 0, 0), 2)
+            num_objects = len(contours)
 
-            frame_delta = cv2.absdiff(background, gray)
-            thresh = cv2.adaptiveThreshold(frame_delta, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-            contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            if num_objects > 0:
+                if 1 <= num_objects <= 10:
+                    #serial.write("2\n".encode())
+                    print("UNO")
+                else:
+                    #serial.write("4\n".encode())
+                    print("MAS DE UNO")
+            else:
+                print("SIN MOVIMIENTO")
+                #serial.write("0\n".encode())
 
-            for contour in contours:
-                if cv2.contourArea(contour) < 1000:
-                    continue
-
-                (x, y, w, h) = cv2.boundingRect(contour)
-                x_center = x + w // 2
-                y_center = y + h // 2
-
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                cv2.circle(frame, (x_center, y_center), 5, (0, 0, 255), -1)
-                cv2.putText(frame, f"X: {x_center}, Y: {y_center}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
-                object_detected = True
-                object_position = (x_center, y_center)
-
-            cv2.imshow(self.camera_window_name, frame)
-
+            cv2.imshow("track", frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
-                print("Seguimiento de movimiento pausado y cerrado")
+                print("Pausado y cerrado")
                 break
 
-        print("Seguimiento de movimiento finalizado")
+        print("Detección de movimiento finalizada")
         cv2.destroyWindow(self.camera_window_name)
-
-        return object_position, object_detected
-
+        self.videoStop()
+        
 
     def retorno(self):
         pass  # Puedes agregar la lógica de retorno específica de la cámara aquí si es necesario
