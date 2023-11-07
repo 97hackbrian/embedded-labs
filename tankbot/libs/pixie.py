@@ -594,5 +594,60 @@ class Camara:
         if self.is_open():
             self.capture.release()
 
+    def track(self):
+        if not self.is_open():
+            print("La cámara no se ha cargado correctamente.")
+            return None, False
+
+        print(f"Realizando seguimiento de movimiento desde la cámara {self.cam_source}...")
+
+        background = None
+        object_detected = False
+        object_position = None
+
+        while True:
+            ret, frame = self.capture.read()
+            if not ret:
+                print("No se pudo obtener un fotograma de la cámara")
+                break
+
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            gray = cv2.GaussianBlur(gray, (21, 21), 0)
+
+            if background is None:
+                background = gray
+                continue
+
+            frame_delta = cv2.absdiff(background, gray)
+            thresh = cv2.adaptiveThreshold(frame_delta, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+            contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            for contour in contours:
+                if cv2.contourArea(contour) < 1000:
+                    continue
+
+                (x, y, w, h) = cv2.boundingRect(contour)
+                x_center = x + w // 2
+                y_center = y + h // 2
+
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.circle(frame, (x_center, y_center), 5, (0, 0, 255), -1)
+                cv2.putText(frame, f"X: {x_center}, Y: {y_center}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+
+                object_detected = True
+                object_position = (x_center, y_center)
+
+            cv2.imshow(self.camera_window_name, frame)
+
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                print("Seguimiento de movimiento pausado y cerrado")
+                break
+
+        print("Seguimiento de movimiento finalizado")
+        cv2.destroyWindow(self.camera_window_name)
+
+        return object_position, object_detected
+
+
     def retorno(self):
         pass  # Puedes agregar la lógica de retorno específica de la cámara aquí si es necesario
