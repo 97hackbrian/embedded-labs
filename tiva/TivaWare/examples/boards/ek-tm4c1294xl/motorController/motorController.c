@@ -42,6 +42,7 @@ uint32_t FS = 120000000/100; //frecuencia del timer
 int flagMotor=0;
 char data[15];
 char comand[7];
+int vel[2];
 
 int main(void)
 {
@@ -132,12 +133,26 @@ int main(void)
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         UARTgets(data,15);
         strcpy(comand, strtok(data, ","));
-        UARTprintf(comand);
+        //UARTprintf(comand);
         
 
         if(strcmp(comand, "motor")==0){
-            flagMotor=1;
-            GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
+            char *token = strtok(NULL, ",");
+            if (token != NULL)
+            {
+                UARTprintf(token);
+                vel[0] = atoi(token);
+                token = strtok(NULL, ",");
+                if (token != NULL)
+                {
+                    UARTprintf(token);
+                    vel[1] = atoi(token);
+                }
+                flagMotor = 1;
+                GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
+            }
+            
+            
 
         }
         else{
@@ -162,10 +177,38 @@ void timer0A_handler(void)
 {
    TimerIntClear(TIMER0_BASE, TIMER_A);
    if (flagMotor==1){
-        width=65;
-        GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);//PF7 y PF5(adelante)0xA0 //0x50 PF4 y PF6(atras)0x50
-        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
-        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,width);
+        if(vel[1]<0){
+            GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x40);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[1]*-1);
+        }
+        else{
+            GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x80);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[1]);
+        }
+
+
+        if(vel[0]<0){
+            GPIOPinWrite(GPIO_PORTK_BASE, 0x30, 0x10);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,vel[0]*-1);
+        }
+        else{
+            GPIOPinWrite(GPIO_PORTK_BASE, 0x30, 0x20);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,vel[0]);
+        }
+
+
+        if(vel[0]==0 || vel[1]==0){
+            GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0x00);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,0);
+        }
+    
+
+
+        
+        //GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);
+        //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,vel[0]);
+        //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[1]);
    }
    else if(flagMotor==0){
         width=0;

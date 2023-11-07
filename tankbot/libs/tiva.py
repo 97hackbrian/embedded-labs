@@ -2,9 +2,10 @@ import serial as com
 from time import sleep
 class InitSerial:
     def __init__(self,baud) -> None:
+        self.ser=None
         for x in range(11):
             try:
-                self.ser=com.Serial('/dev/ttyACM{x}',baud,timeout=1)
+                self.ser=com.Serial(f"/dev/ttyACM{x}",baud,timeout=1)
                 if self.ser.is_open:
                     print("Successful to connect in the port ttyACM",x)
                     self.ser.reset_input_buffer()
@@ -12,9 +13,12 @@ class InitSerial:
                     break
             except:
                 print("Problem to connect to ttyACM",x,"\nTry to connect to the next port")
-    def send_data(self,*args):
-        smg = ",".join(map(str, args))  # Une los argumentos en una cadena separada por comas
-        self.ser.write(f"{smg}\n")  # Agrega un salto de línea al final para enviar los datos
+                #print(f'/dev/ttyACM{x}')
+    def send_data(self, *args):
+        smg = ",".join(map(str, args))  # Join the arguments into a comma-separated string
+        smg += "\n"  # Add a newline character at the end
+        self.ser.write(smg.encode('utf-8'))  # Encode the string as bytes and send it
+
 
                 
         
@@ -27,10 +31,10 @@ class Motors:
         Motors.num_motor += 1  # Incrementar el número de instancias
 
     def move(self, left, right):
-        self.ser.send_data(f"motor{self.motor_number}", left, right)
+        self.ser.send_data(f"motor", left, right)
 
     def stop(self):
-        self.ser.send_data(f"motor{self.motor_number}", -1, -1)
+        self.ser.send_data(f"motor", 1, 1)
 
 class LedControl:
     def __init__(self, serial_instance) -> None:
@@ -43,7 +47,7 @@ class LedControl:
         self.ser.send_data(f"leds", l1, l2, l3, l4)
 
     def init_system(self,cam=0):
-        sequences = [(1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1), (1, 1, 1, 1), (1, 1, 1, 1),(0, 0, 0,01)]
+        sequences = [(1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1), (1, 1, 1, 1), (1, 1, 1, 1),(0, 0, 0,1)]
 
         for sequence in sequences:
             try:
