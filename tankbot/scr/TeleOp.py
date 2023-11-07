@@ -20,11 +20,11 @@ def on_key_press(key):
         left_velocity = 70
         right_velocity = 70
     elif key == Key.down:
-        left_velocity = -60
-        right_velocity = -60
+        left_velocity = -65
+        right_velocity = -65
     elif key == Key.left:
-        left_velocity = -80
-        right_velocity = 80
+        left_velocity = -75
+        right_velocity = 75
     elif key == Key.right:
         left_velocity = 70
         right_velocity = -70
