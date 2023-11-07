@@ -198,7 +198,7 @@ int main(void)
                         }
                     }
                 }
-                flagMotor = 1;
+                //flagMotor = 1;
                 //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
             }
             
