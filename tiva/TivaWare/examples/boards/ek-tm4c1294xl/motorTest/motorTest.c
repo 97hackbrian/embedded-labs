@@ -130,7 +130,7 @@ int main(void)
     while(1){
         GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
         //UARTgets(data,10);
-        width=89;
+        width=65;
         GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);//PF7 y PF5(adelante)0xA0 //0x50 PF4 y PF6(atras)0x50
         PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
         PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,width);
