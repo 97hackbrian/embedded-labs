@@ -90,48 +90,25 @@ while True:
 
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours2, _ = cv2.findContours(mask_negro2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
+    def FocalLength(measured_distance, real_width, width_in_rf_image): 
+        focal_length = (width_in_rf_image* measured_distance)/ real_width 
+        return focal_length 
     for cnt in contours2:
         area = cv2.contourArea(cnt)
-        if area > 2200:
+        if area > 1500:
             shape2,lin,ra=detect(cnt)
             x, y, w, h = cv2.boundingRect(cnt)
             center_x = x + w // 2
             color = classify_color(frame_hsv[y + h // 2, x + w // 2])
-            
-            if shape2 == 'cuadrado':
+            dir=FocalLength(radio,10,10)
+            if dir >10:
                 motors.move(70,70)
                 #print("avanzar")
-            
-            #print("lineas ",lin," ratio ",ra)
-    
-    for cnt in contours:
-        area = cv2.contourArea(cnt)
-        if area > 1000:
-            shape, lineas, ratio = detect(cnt)
-            
-            x, y, w, h = cv2.boundingRect(cnt)
-            center_x = x + w // 2
-            color = classify_color(frame_hsv[y + h // 2, x + w // 2])
-            
-            if shape == 'cuadrado' and color == "negro":
-                print("Cuadrado - Color: " + color)
-                motors.move(70,70)
-            elif shape == 'triangulo' and color == "naranja":
-                print("Triángulo - Color: " + color)
-                motors.move(-70,-70)
-                sleep(0.2)
-            elif shape == 'circulo' and color=="morado":
-                motors.move(100,100)
-                print("Círculo - Color: " + color,"  ratio= ",ratio)
-            
-            
             else:
-                #print("centro")
-                motors.move(70,70)
-
-                
-            print("lineas ",lineas," ratio ",ratio)
+                motors.stop()
+            
+            print(" ratio ",ra)
+    
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)
 
