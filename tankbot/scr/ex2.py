@@ -24,11 +24,11 @@ def detect(contour):
   
     
     
-    if ((len(approximate) ==4)and (aspect_ratio>=1.2 and aspect_ratio<=1.5 )):
+    if (((len(approximate) ==4)or (len(approximate) ==3))and (aspect_ratio>=1 and aspect_ratio<=1.5 )):
         shape = 'cuadrado'
-    elif ((len(approximate) ==3)and (aspect_ratio>=1 and aspect_ratio<=5.5  )):
+    elif (((len(approximate) ==3))and (aspect_ratio>=0.85 and aspect_ratio<=4  )):
         shape = 'triangulo'
-    elif (((len(approximate) ==3)or (len(approximate) ==4)or(len(approximate) ==5))and (aspect_ratio>=0.5 and aspect_ratio<1)):
+    elif (((len(approximate) ==3)or (len(approximate) ==4)or(len(approximate) ==5))and (aspect_ratio>=0.5 and aspect_ratio<1.5)):
         shape = 'circulo'
     
 
@@ -61,8 +61,8 @@ cap = cv2.VideoCapture(0)
 
 while True:
     ret, frame = cap.read()
-    #frame = frame[:, :]
-
+    frame = frame[200:, :]
+    frame=cv2.GaussianBlur(frame,(23,23),0)
     if not ret:
         break
 
@@ -101,7 +101,8 @@ while True:
             
             if shape2 == 'cuadrado':
                 motors.move(70,70)
-                print("avanzar")
+                #print("avanzar")
+            
             #print("lineas ",lin," ratio ",ra)
     
     for cnt in contours:
@@ -119,6 +120,7 @@ while True:
             elif shape == 'triangulo' and color == "naranja":
                 print("Triángulo - Color: " + color)
                 motors.move(-70,-70)
+                sleep(0.2)
             elif shape == 'circulo' and color=="morado":
                 motors.move(100,100)
                 print("Círculo - Color: " + color,"  ratio= ",ratio)
@@ -128,7 +130,7 @@ while True:
                 #print("centro")
                 motors.stop()
                 
-            #print("lineas ",lineas," ratio ",ratio)
+            print("lineas ",lineas," ratio ",ratio)
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)
 
