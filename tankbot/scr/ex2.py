@@ -24,7 +24,7 @@ def detect(contour):
   
     
     
-    if ((len(approximate) ==4)and (aspect_ratio==1 )):
+    if ((len(approximate) ==4)and (aspect_ratio>=1.2 and aspect_ratio<=1.5 )):
         shape = 'cuadrado'
     elif ((len(approximate) ==3)and (aspect_ratio>=1 and aspect_ratio<=5.5  )):
         shape = 'triangulo'
@@ -67,6 +67,7 @@ while True:
         break
 
     frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    gray= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     lower_morado = np.array([200, 90, 100])
     upper_morado = np.array([255, 150, 180])
@@ -80,6 +81,7 @@ while True:
     mask_morado = cv2.inRange(frame_hsv, lower_morado, upper_morado)
     mask_naranja = cv2.inRange(frame_hsv, lower_naranja, upper_naranja)
     mask_negro = cv2.inRange(frame_hsv, lower_negro, upper_negro)
+    mask_negro2 = cv2.inRange(gray, 200, 250)
     #mask_red2 = cv2.inRange(frame_hsv, lower_red2, upper_red2)
 
     #mask_red = mask_red1 + mask_red2
@@ -87,20 +89,38 @@ while True:
     mask = mask_morado + mask_naranja + mask_negro
 
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours2, _ = cv2.findContours(mask_negro2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+    for cnt in contours2:
+        area = cv2.contourArea(cnt)
+        if area > 2200:
+            shape2,lin,ra=detect(cnt)
+            x, y, w, h = cv2.boundingRect(cnt)
+            center_x = x + w // 2
+            color = classify_color(frame_hsv[y + h // 2, x + w // 2])
+            
+            if shape2 == 'cuadrado':
+                motors.move(70,70)
+                print("avanzar")
+            #print("lineas ",lin," ratio ",ra)
+    
     for cnt in contours:
         area = cv2.contourArea(cnt)
         if area > 1000:
             shape, lineas, ratio = detect(cnt)
+            
             x, y, w, h = cv2.boundingRect(cnt)
             center_x = x + w // 2
             color = classify_color(frame_hsv[y + h // 2, x + w // 2])
             
             if shape == 'cuadrado' and color == "negro":
                 print("Cuadrado - Color: " + color)
+                motors.move(70,70)
             elif shape == 'triangulo' and color == "naranja":
                 print("Triángulo - Color: " + color)
+                motors.move(-70,-70)
             elif shape == 'circulo' and color=="morado":
+                motors.move(100,100)
                 print("Círculo - Color: " + color,"  ratio= ",ratio)
             
             
