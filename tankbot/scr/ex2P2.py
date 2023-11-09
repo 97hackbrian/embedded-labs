@@ -5,7 +5,7 @@ import numpy as np
 sys.path.append('/root/Desktop/embedded-labs/tankbot')
 from libs.tracker import *
 from libs.tiva import *
-
+ra=0
 def detect(contour):
     """
     Función que, dado un contorno, retorna la forma geométrica más cercana con base al número de lados del perímetro del
@@ -24,12 +24,8 @@ def detect(contour):
   
     
     
-    if (((len(approximate) ==4)or (len(approximate) ==3))and (aspect_ratio>=1 and aspect_ratio<=1.5 )):
+    if ((len(approximate) ==4)and (aspect_ratio>=0.5 and aspect_ratio<=20 )):
         shape = 'cuadrado'
-    elif (((len(approximate) ==3))and (aspect_ratio>=0.85 and aspect_ratio<=4  )):
-        shape = 'triangulo'
-    elif (((len(approximate) ==3)or (len(approximate) ==4)or(len(approximate) ==5))and (aspect_ratio>=0.5 and aspect_ratio<1.5)):
-        shape = 'circulo'
     
 
         
@@ -61,7 +57,7 @@ cap = cv2.VideoCapture(0)
 
 while True:
     ret, frame = cap.read()
-    frame = frame[200:, :]
+    frame = frame[100:, :]
     frame=cv2.GaussianBlur(frame,(23,23),0)
     if not ret:
         break
@@ -81,32 +77,33 @@ while True:
     mask_morado = cv2.inRange(frame_hsv, lower_morado, upper_morado)
     mask_naranja = cv2.inRange(frame_hsv, lower_naranja, upper_naranja)
     mask_negro = cv2.inRange(frame_hsv, lower_negro, upper_negro)
-    mask_negro2 = cv2.inRange(gray, 200, 250)
+    _,mask_negro2 =   cv2.threshold(gray, 70, 255, cv2.THRESH_BINARY)
     #mask_red2 = cv2.inRange(frame_hsv, lower_red2, upper_red2)
 
     #mask_red = mask_red1 + mask_red2
 
-    mask = mask_morado + mask_naranja + mask_negro
+    mask = mask_negro2
 
-    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    #contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     contours2, _ = cv2.findContours(mask_negro2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     def FocalLength(measured_distance, real_width, width_in_rf_image): 
         focal_length = (width_in_rf_image* measured_distance)/ real_width 
         return focal_length 
     for cnt in contours2:
         area = cv2.contourArea(cnt)
-        if area > 1500:
+        if area > 100:
             shape2,lin,ra=detect(cnt)
             x, y, w, h = cv2.boundingRect(cnt)
             center_x = x + w // 2
-            color = classify_color(frame_hsv[y + h // 2, x + w // 2])
-            dir=FocalLength(radio,10,10)
-            if dir >10:
-                motors.move(70,70)
-                #print("avanzar")
-            else:
-                motors.stop()
-            
+            #color = classify_color(frame_hsv[y + h // 2, x + w // 2])
+            #dir=FocalLength(ra,10,10)
+            if shape2=="cuadrado":
+                if ra >10:
+                    motors.move(70,70)
+                    #print("avanzar")
+                else:
+                    motors.stop()
+                
             print(" ratio ",ra)
     
     cv2.imshow("Frame", frame)

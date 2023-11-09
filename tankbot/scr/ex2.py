@@ -115,20 +115,26 @@ while True:
             color = classify_color(frame_hsv[y + h // 2, x + w // 2])
             
             if shape == 'cuadrado' and color == "negro":
+                motors.move(0,0)
+                sleep(0.2)
                 print("Cuadrado - Color: " + color)
                 motors.move(70,70)
             elif shape == 'triangulo' and color == "naranja":
                 print("Triángulo - Color: " + color)
+                motors.move(0,0)
+                sleep(0.2)
                 motors.move(-70,-70)
                 sleep(0.2)
             elif shape == 'circulo' and color=="morado":
+                motors.move(0,0)
+                sleep(0.2)
                 motors.move(100,100)
                 print("Círculo - Color: " + color,"  ratio= ",ratio)
             
             
             else:
                 #print("centro")
-                motors.move(70,70)
+                motors.move(50,-50)
 
                 
             print("lineas ",lineas," ratio ",ratio)
