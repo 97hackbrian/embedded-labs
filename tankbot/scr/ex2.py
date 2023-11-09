@@ -26,9 +26,9 @@ def detect(contour):
     
     if ((len(approximate) ==4)and (aspect_ratio==1 )):
         shape = 'cuadrado'
-    elif ((len(approximate) ==3)and (aspect_ratio>=1 and aspect_ratio<=1.5  )):
+    elif ((len(approximate) ==3)and (aspect_ratio>=1 and aspect_ratio<=5.5  )):
         shape = 'triangulo'
-    elif ((len(approximate) ==7)and (aspect_ratio>=0.8 and aspect_ratio<1)):
+    elif (((len(approximate) ==3)or (len(approximate) ==4)or(len(approximate) ==5))and (aspect_ratio>=0.5 and aspect_ratio<1)):
         shape = 'circulo'
     
 
@@ -43,9 +43,9 @@ def detect(contour):
 def classify_color(hsv_color):
     hue = hsv_color[0]
 
-    if (0 <= hue <= 10) or (160 <= hue <= 180):
-        return "morado"  # Círculo = 
-    elif 10 <= hue <= 20:
+    if (100 <= hue <= 255):# or (200 <= hue <= 180):
+        return "morado"  # Círculo = 274,70,62
+    elif 0 <= hue <= 99:
         return "naranja"  # Triángulo = 24,79,92
     else:
         return "negro"  # Cuadrado = 0,0,25
@@ -61,37 +61,37 @@ cap = cv2.VideoCapture(0)
 
 while True:
     ret, frame = cap.read()
-    frame = frame[300:, :]
+    #frame = frame[:, :]
 
     if not ret:
         break
 
     frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    lower_blue = np.array([0, 0, 0])
-    upper_blue = np.array([0, 0, 0])
-    lower_green = np.array([0, 0, 0])
-    upper_green = np.array([0, 0, 0])
-    lower_red1 = np.array([0, 50, 50])
-    upper_red1 = np.array([10, 150, 255])
-    lower_red2 = np.array([160, 50, 50])
-    upper_red2 = np.array([180, 150, 255])
+    lower_morado = np.array([200, 90, 100])
+    upper_morado = np.array([255, 150, 180])
+    lower_naranja = np.array([1, 48, 100])
+    upper_naranja = np.array([200, 125, 200])
+    lower_negro = np.array([90, 90, 90])
+    upper_negro = np.array([120, 120, 120])
+    #lower_red2 = np.array([160, 50, 50])
+    #upper_red2 = np.array([180, 150, 255])
 
-    mask_blue = cv2.inRange(frame_hsv, lower_blue, upper_blue)
-    mask_green = cv2.inRange(frame_hsv, lower_green, upper_green)
-    mask_red1 = cv2.inRange(frame_hsv, lower_red1, upper_red1)
-    mask_red2 = cv2.inRange(frame_hsv, lower_red2, upper_red2)
+    mask_morado = cv2.inRange(frame_hsv, lower_morado, upper_morado)
+    mask_naranja = cv2.inRange(frame_hsv, lower_naranja, upper_naranja)
+    mask_negro = cv2.inRange(frame_hsv, lower_negro, upper_negro)
+    #mask_red2 = cv2.inRange(frame_hsv, lower_red2, upper_red2)
 
-    mask_red = mask_red1 + mask_red2
+    #mask_red = mask_red1 + mask_red2
 
-    mask = mask_blue + mask_green + mask_red
+    mask = mask_morado + mask_naranja + mask_negro
 
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     for cnt in contours:
         area = cv2.contourArea(cnt)
         if area > 1000:
-            shape, _, _ = detect(cnt)
+            shape, lineas, ratio = detect(cnt)
             x, y, w, h = cv2.boundingRect(cnt)
             center_x = x + w // 2
             color = classify_color(frame_hsv[y + h // 2, x + w // 2])
@@ -100,13 +100,15 @@ while True:
                 print("Cuadrado - Color: " + color)
             elif shape == 'triangulo' and color == "naranja":
                 print("Triángulo - Color: " + color)
-            elif shape == 'circulo' and color=morado:
-                print("Círculo - Color: " + color)
-
+            elif shape == 'circulo' and color=="morado":
+                print("Círculo - Color: " + color,"  ratio= ",ratio)
+            
+            
             else:
-                print("centro")
+                #print("centro")
                 motors.stop()
-
+                
+            #print("lineas ",lineas," ratio ",ratio)
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)
 
