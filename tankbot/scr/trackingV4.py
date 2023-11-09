@@ -11,6 +11,9 @@ motors = Motors(serial_instance=tiva1)
 Leds = LedControl(serial_instance=tiva1)
 Leds.init_system(cam=0)  # Repair cam=1
 
+pid=[]
+k=[1,0,0]
+setpoint=640/2
 # Create tracker object
 tracker = EuclideanDistTracker()
 
@@ -56,6 +59,11 @@ while True:
         if area > 1000:
             x, y, w, h = cv2.boundingRect(cnt)
             center_x = x + w // 2
+            error=center_x-setpoint
+            pid[0]=k[0]*error
+
+            print(pid)
+
 
             if center_x > 420:
                 print("derecha")
