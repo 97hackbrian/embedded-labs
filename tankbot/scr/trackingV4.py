@@ -11,8 +11,9 @@ motors = Motors(serial_instance=tiva1)
 Leds = LedControl(serial_instance=tiva1)
 Leds.init_system(cam=0)  # Repair cam=1
 
-pid=[]
-k=[1,0,0]
+pid=[0,0,0]
+k=[0.7,0,0.1]
+errorAnt=0
 setpoint=640/2
 # Create tracker object
 tracker = EuclideanDistTracker()
@@ -61,19 +62,20 @@ while True:
             center_x = x + w // 2
             error=center_x-setpoint
             pid[0]=k[0]*error
+            pid[2]=(error-errorAnt)*k[2]
 
-            print(pid)
+            # Interpolate PID[0] from 60 to 100
+            interpolated_pid = min(100, max(60, 60 + (sum(pid) + 100) / 2.0))
+            print("Interpolated PID:", interpolated_pid)
 
-
+            # Control the motors with the interpolated PID value
             if center_x > 420:
-                print("derecha")
-                motors.move(70, -70)
+                motors.move(int(interpolated_pid), -int(interpolated_pid))
             elif center_x < 210:
-                print("izquierda")
-                motors.move(-84, 84)
+                motors.move(-int(interpolated_pid), int(interpolated_pid))
             else:
-                print("centro")
                 motors.stop()
+            errorAnt=error
 
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)
