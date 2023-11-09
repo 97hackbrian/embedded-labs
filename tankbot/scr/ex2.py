@@ -44,11 +44,11 @@ def classify_color(hsv_color):
     hue = hsv_color[0]
 
     if (0 <= hue <= 10) or (160 <= hue <= 180):
-        return "morado"  # Círculo
+        return "morado"  # Círculo = 
     elif 10 <= hue <= 20:
-        return "naranja"  # Triángulo
+        return "naranja"  # Triángulo = 24,79,92
     else:
-        return "negro"  # Cuadrado
+        return "negro"  # Cuadrado = 0,0,25
 
 tiva1 = InitSerial(baud=9600)
 motors = Motors(serial_instance=tiva1)
