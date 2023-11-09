@@ -16,7 +16,7 @@ cap = cv2.VideoCapture(0)
 
 # Object detection from Stable camera
 object_detector = cv2.createBackgroundSubtractorMOG2(history=100, varThreshold=40)
-clahe=cv2.createCLAHE(clipLimit=30, tileGridSize=(57,57))
+clahe=cv2.createCLAHE(clipLimit=2, tileGridSize=(27,27)) #2,27,27
 while True:
     ret, frame = cap.read()
     frame=cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
@@ -28,13 +28,13 @@ while True:
     height, width = frame.shape
 
     # Extract Region of interest
-    roi = frame[380:,: ]
+    roi = frame[120:,: ]
 
     # 1. Object Detection
     mask = object_detector.apply(roi)
    #_, mask = cv2.threshold(mask, 254, 255, cv2.THRESH_BINARY)
     mask = cv2.adaptiveThreshold(mask, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV, 11, 40)
-    mask = cv2.Canny(mask,10,1)
+    mask = cv2.Canny(mask,1,1)
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     detections = []
     for cnt in contours:
@@ -48,7 +48,7 @@ while True:
                 motors.move(70,-70)
                 
             elif(x<230):
-                motors.move(-80,80)
+                motors.move(-84,84)
                 print("izquierda")
             else:
                 motors.stop()
