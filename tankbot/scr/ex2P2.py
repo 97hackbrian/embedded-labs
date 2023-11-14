@@ -24,7 +24,7 @@ def detect(contour):
   
     
     
-    if ((len(approximate) ==4)and (aspect_ratio>=0.5 and aspect_ratio<=20 )):
+    if ((len(approximate) ==4)and (aspect_ratio>=0.5 and aspect_ratio<=4 )):
         shape = 'cuadrado'
     
 
@@ -54,11 +54,11 @@ Leds.init_system(cam=0)
 tracker = EuclideanDistTracker()
 
 cap = cv2.VideoCapture(0)
-
+con=0
 while True:
     ret, frame = cap.read()
-    frame = frame[100:, :]
-    frame=cv2.GaussianBlur(frame,(23,23),0)
+    #frame = frame[100:, :]
+    frame=cv2.GaussianBlur(frame,(15,15),0)
     if not ret:
         break
 
@@ -77,37 +77,56 @@ while True:
     mask_morado = cv2.inRange(frame_hsv, lower_morado, upper_morado)
     mask_naranja = cv2.inRange(frame_hsv, lower_naranja, upper_naranja)
     mask_negro = cv2.inRange(frame_hsv, lower_negro, upper_negro)
-    _,mask_negro2 =   cv2.threshold(gray, 70, 255, cv2.THRESH_BINARY)
+    _,mask_negro2 =   cv2.threshold(gray, 25, 255, cv2.THRESH_BINARY)
     #mask_red2 = cv2.inRange(frame_hsv, lower_red2, upper_red2)
 
     #mask_red = mask_red1 + mask_red2
 
     mask = mask_negro2
-
+    contoursCanny=cv2.Canny(mask,0,100)
     #contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    contours2, _ = cv2.findContours(mask_negro2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours2, _ = cv2.findContours(contoursCanny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
     def FocalLength(measured_distance, real_width, width_in_rf_image): 
         focal_length = (width_in_rf_image* measured_distance)/ real_width 
         return focal_length 
     for cnt in contours2:
         area = cv2.contourArea(cnt)
-        if area > 100:
+        
+        if area > 10000:
+            
+    
+            print("area: ",area)
             shape2,lin,ra=detect(cnt)
-            x, y, w, h = cv2.boundingRect(cnt)
-            center_x = x + w // 2
-            #color = classify_color(frame_hsv[y + h // 2, x + w // 2])
-            #dir=FocalLength(ra,10,10)
             if shape2=="cuadrado":
-                if ra >10:
+                shape,count,ratio = shape2,lin,ra
+                con=con+1
+                cv2.drawContours(frame, [cnt], -1, (255, 255, 0), 2)  # Dibuja el contorno en la imagen RGB
+                
+                cv2.putText(frame, str(shape)+str(con), tuple(cnt[0][0]+40), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 0, 0), 3)
+                cv2.putText(frame, str(count), tuple(cnt[0][0]+90), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 0, 0), 3)
+                cv2.putText(frame, str(ratio), tuple(cnt[0][0]+130), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 0, 0), 3)
+                x, y, w, h = cv2.boundingRect(cnt)
+                center_x = x + w // 2
+                #color = classify_color(frame_hsv[y + h // 2, x + w // 2])
+                #dir=FocalLength(ra,10,10)
+                if area<=50000:
+                    
                     motors.move(70,70)
-                    #print("avanzar")
+                    print("avanzar!")
                 else:
                     motors.stop()
-                
-            print(" ratio ",ra)
+                    print("stop!")
+                    
+                #print(" ratio ",ra)
+
+            else:
+                    motors.stop()
+                    print("stop!")
+        
     
     cv2.imshow("Frame", frame)
-    cv2.imshow("Mask", mask)
+    cv2.imshow("Mask", contoursCanny)
 
     key = cv2.waitKey(30)
     if key == 27:
