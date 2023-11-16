@@ -112,7 +112,7 @@ while True:
                 #dir=FocalLength(ra,10,10)
                 if area<=50000:
                     
-                    motors.move(70,70)
+                    motors.move(60,60)
                     print("avanzar!")
                 else:
                     motors.stop()
