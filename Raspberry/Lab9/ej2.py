@@ -35,8 +35,8 @@ while True:
 
         # Check if the object is passing through the middle of the frame
         if x < frame.shape[1] // 2 < x + w and y < frame.shape[0] // 2 < y + h:
-            cv2.putText(frame, "Object Detected", (frame.shape[1] - 200, frame.shape[0] - 20),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            cv2.putText(frame, "Object Detected", (frame.shape[1] - 300, frame.shape[0] - 20),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
         # Draw the bounding box around the object
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
