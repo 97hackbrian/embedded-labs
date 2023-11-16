@@ -30,10 +30,10 @@ while True:
     upper_blue = np.array([0, 0, 0])
     lower_green = np.array([0, 0, 0])
     upper_green = np.array([0, 0, 0])
-    lower_red1 = np.array([0, 50, 50])
-    upper_red1 = np.array([10, 255, 255])
-    lower_red2 = np.array([0, 50, 0])###
-    upper_red2 = np.array([10, 255, 255])
+    lower_red1 = np.array([150, 50, 150])
+    upper_red1 = np.array([255, 255, 255])
+    lower_red2 = np.array([0, 0, 0])###
+    upper_red2 = np.array([0, 0, 0])
 
     # Create masks for the colors
     mask_blue = cv2.inRange(frame_hsv, lower_blue, upper_blue)
@@ -47,18 +47,20 @@ while True:
     # Combine all masks
     mask = mask_blue + mask_green + mask_red
 
+    mask=cv2.GaussianBlur(mask,(11,11),0)
+
     # Find contours in the combined mask
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     print(len(contours))
-    if len(contours)>=25:
+    if len(contours)>=1 and len(contours)<=6:
         for cnt in contours:
             # Calculate area and remove small elements
             area = cv2.contourArea(cnt)
             
             
-            if area > 10000:
+            if area > 15000:
                 print("cnt ",len(cnt))
-                if len(cnt)>=2000:
+                if len(cnt)>=1000:
                     Leds.write(1,1,0,0)
                     sleep(0.01)
                     Leds.write(0,0,1,1)

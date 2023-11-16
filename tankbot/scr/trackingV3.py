@@ -30,10 +30,10 @@ while True:
     upper_blue = np.array([0, 0, 0])
     lower_green = np.array([0, 0, 0])
     upper_green = np.array([0, 0, 0])
-    lower_red1 = np.array([0, 50, 50])
-    upper_red1 = np.array([10, 150, 255])
-    lower_red2 = np.array([160, 50, 50])
-    upper_red2 = np.array([180, 150, 255])
+    lower_red1 = np.array([150, 50, 150])
+    upper_red1 = np.array([255, 255, 255])
+    lower_red2 = np.array([0, 0, 0])###
+    upper_red2 = np.array([0, 0, 0])
 
     # Create masks for the colors
     mask_blue = cv2.inRange(frame_hsv, lower_blue, upper_blue)
