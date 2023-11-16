@@ -20663,7 +20663,7 @@ Source: www.kingbright.com</description>
 <pinref part="U$3" gate="G$1" pin="VIN+"/>
 </segment>
 <segment>
-<label x="58.42" y="-22.86" size="1.778" layer="95" rot="MR0" xref="yes"/>
+<label x="60.96" y="-22.86" size="1.778" layer="95" rot="MR0" xref="yes"/>
 </segment>
 <segment>
 <pinref part="D1" gate="1" pin="C"/>
@@ -20884,7 +20884,7 @@ Source: www.kingbright.com</description>
 <pinref part="IC2" gate="A" pin="IN"/>
 <wire x1="63.5" y1="-27.94" x2="63.5" y2="-22.86" width="0.1524" layer="91"/>
 <wire x1="63.5" y1="-22.86" x2="71.12" y2="-22.86" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="-22.86" x2="63.5" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="-22.86" x2="63.5" y2="-22.86" width="0.1524" layer="91"/>
 <junction x="63.5" y="-22.86"/>
 </segment>
 </net>

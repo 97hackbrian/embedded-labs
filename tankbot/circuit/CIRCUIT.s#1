@@ -20515,22 +20515,22 @@ Source: www.kingbright.com</description>
 </variantdefs>
 <classes>
 <class number="0" name="default" width="0.381" drill="0.2032">
-<clearance class="0" value="1.016"/>
+<clearance class="0" value="1.27"/>
 </class>
 <class number="1" name="RasPins" width="0" drill="8">
-<clearance class="1" value="1.016"/>
+<clearance class="1" value="1.27"/>
 </class>
 <class number="2" name="TivaPins" width="0.381" drill="0.2032">
-<clearance class="2" value="1.016"/>
+<clearance class="2" value="1.27"/>
 </class>
 <class number="3" name="VInbat" width="1.27" drill="0.4064">
-<clearance class="3" value="1.016"/>
+<clearance class="3" value="1.27"/>
 </class>
 <class number="4" name="5v3A" width="1.27" drill="0.508">
-<clearance class="4" value="1.016"/>
+<clearance class="4" value="1.27"/>
 </class>
 <class number="5" name="outsVoltaje" width="0.635" drill="0.2032">
-<clearance class="5" value="1.016"/>
+<clearance class="5" value="1.27"/>
 </class>
 </classes>
 <parts>
