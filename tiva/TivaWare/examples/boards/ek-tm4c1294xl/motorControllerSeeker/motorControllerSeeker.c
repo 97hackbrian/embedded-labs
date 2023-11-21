@@ -441,7 +441,9 @@ void timer3A_handler(void)
 }
 
 void timer4A_handler(void)
-{
+{//8 o 4
     TimerIntClear(TIMER4_BASE, TIMER_A);
-    GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x02);
+
+    GPIOPinWrite(GPIO_PORTL_BASE, 0xC, 0x04);
+    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_7,1000);
 }
