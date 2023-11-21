@@ -47,6 +47,7 @@ extern int main(void);
 extern void timer1A_handler(void);
 extern void timer2A_handler(void);
 extern void timer3A_handler(void);
+extern void timer4A_handler(void);
 //*****************************************************************************
 //
 // Reserve space for the system stack.
@@ -143,7 +144,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // UART7 Rx and Tx
     IntDefaultHandler,                      // I2C2 Master and Slave
     IntDefaultHandler,                      // I2C3 Master and Slave
-    IntDefaultHandler,                      // Timer 4 subtimer A
+    timer4A_handler,                      // Timer 4 subtimer A
     IntDefaultHandler,                      // Timer 4 subtimer B
     IntDefaultHandler,                      // Timer 5 subtimer A
     IntDefaultHandler,                      // Timer 5 subtimer B

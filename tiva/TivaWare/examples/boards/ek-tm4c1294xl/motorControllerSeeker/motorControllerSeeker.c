@@ -42,10 +42,12 @@ __error__(char *pcFilename, uint32_t ui32Line)
 void timer1A_handler(void);
 void timer2A_handler(void);
 void timer3A_handler(void);
+void timer4A_handler(void);
 int state=0;
 uint32_t FS = 120000000/100; //frecuencia del timer
 uint32_t FS2 = 120000000/100; //frecuencia del timer
 uint32_t FS3 = 120000000/100; //frecuencia del timer
+uint32_t FS4 = 120000000/100; //frecuencia del timer
 
 char data[50];
 char comand[50];
@@ -106,7 +108,8 @@ int main(void)
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER2);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER3);
-
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER4);
+    
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
 
 
@@ -135,6 +138,14 @@ int main(void)
     IntEnable(INT_TIMER3A);
     TimerIntEnable(TIMER3_BASE, TIMER_TIMA_TIMEOUT);   
     TimerEnable(TIMER3_BASE, TIMER_A);
+    IntMasterEnable();
+
+    //configuracion timer4A
+    TimerConfigure(TIMER4_BASE, TIMER_CFG_PERIODIC);
+    TimerLoadSet(TIMER4_BASE, TIMER_A, FS);
+    IntEnable(INT_TIMER4A);
+    TimerIntEnable(TIMER4_BASE, TIMER_TIMA_TIMEOUT);   
+    TimerEnable(TIMER4_BASE, TIMER_A);
     IntMasterEnable();
    
 
@@ -427,4 +438,10 @@ void timer3A_handler(void)
         PWMPulseWidthSet(PWM0_BASE,PWM_OUT_1,0);
         PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
     }
+}
+
+void timer4A_handler(void)
+{
+    TimerIntClear(TIMER4_BASE, TIMER_A);
+    GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x02);
 }
