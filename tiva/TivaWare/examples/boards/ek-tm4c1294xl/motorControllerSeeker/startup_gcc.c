@@ -45,6 +45,7 @@ extern int main(void);
 //
 extern void timer0A_handler(void);
 extern void timer1A_handler(void);
+extern void timer2A_handler(void);
 //*****************************************************************************
 //
 // Reserve space for the system stack.
@@ -101,7 +102,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // Timer 0 subtimer B
     timer1A_handler,                      // Timer 1 subtimer A
     IntDefaultHandler,                      // Timer 1 subtimer B
-    IntDefaultHandler,                      // Timer 2 subtimer A
+    timer2A_handler,                      // Timer 2 subtimer A
     IntDefaultHandler,                      // Timer 2 subtimer B
     IntDefaultHandler,                      // Analog Comparator 0
     IntDefaultHandler,                      // Analog Comparator 1
