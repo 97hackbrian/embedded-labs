@@ -373,6 +373,13 @@ void timer3A_handler(void)
     GPIOPinWrite(GPIO_PORTH_BASE, 0x02, 0x02);
     GPIOPinWrite(GPIO_PORTH_BASE, 0x01, 0x01);
 
+    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_1,100);
+    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
+    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_3,5000);
+    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,0);
+
+
+/*
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
     //GPIOPinWrite(GPIO_PORTG_BASE, 0x01, 0x00);
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,5000);
@@ -381,7 +388,7 @@ void timer3A_handler(void)
     //GPIOPinWrite(GPIO_PORTG_BASE, 0x01, 0x00);
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_6,0);
     
-    
+ */   
     /*
     GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x02);
 
