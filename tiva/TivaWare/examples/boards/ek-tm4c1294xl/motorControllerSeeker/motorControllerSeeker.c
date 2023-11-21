@@ -52,6 +52,7 @@ uint32_t FS4 = 120000000/100; //frecuencia del timer
 char data[50];
 char comand[50];
 int vel[2];
+int vel2[1];
 
 int flagMotor1=0;
 int flagMotor2=0;
@@ -354,7 +355,28 @@ int main(void)
         else {
             flagMosfet = 0;
         }
+
+        if(strcmp(comand, "gripper")==0){
+            char *token = strtok(NULL, ",");
+            if (token != NULL)
+            {
+                //UARTprintf(token);
+                vel2[0] = atoi(token);
+                token = strtok(NULL, ",");
+                if (token != NULL)
+                {
+                 
+                }
+     
+            }
+            
+            
+
+        }
+
+
     }
+
 }
 
 
@@ -443,7 +465,16 @@ void timer3A_handler(void)
 void timer4A_handler(void)
 {//8 o 4
     TimerIntClear(TIMER4_BASE, TIMER_A);
-
-    GPIOPinWrite(GPIO_PORTL_BASE, 0xC, 0x04);
-    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_7,1000);
+    if(vel2[0]<0){
+        GPIOPinWrite(GPIO_PORTL_BASE, 0xC, 0x04);
+        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_7,interpolar(vel[0]*-1,0,100,1,10000));
+    }
+    else{
+        GPIOPinWrite(GPIO_PORTL_BASE, 0xC, 0x08);
+        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_7,interpolar(vel[0],0,100,1,10000));
+    }
+    if(vel2[0]==0){
+        GPIOPinWrite(GPIO_PORTL_BASE, 0xC, 0x0);
+        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_7,0);
+    }
 }
