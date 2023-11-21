@@ -67,6 +67,18 @@ int mainvel1[2];
 int leds[4];
 int mosfet[6];
 
+int interpolar(int valor, int entrada_min, int entrada_max, int salida_min, int salida_max) {
+    // Asegurar que el valor de entrada esté dentro del rango
+    valor = (valor <= entrada_min) ? entrada_min : valor;
+    valor = (valor >= entrada_max) ? entrada_max : valor;
+
+    // Calcular la interpolación lineal
+    double porcentaje = (valor - entrada_min) / (double)(entrada_max - entrada_min);
+    int resultado = salida_min + porcentaje * (salida_max - salida_min);
+
+    return resultado;
+}
+
 int main(void)
 {
 
@@ -367,7 +379,7 @@ void timer2A_handler(void) {
 void timer3A_handler(void)
 {
     TimerIntClear(TIMER3_BASE, TIMER_A);
-
+    /*
     GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x02);
 
     GPIOPinWrite(GPIO_PORTH_BASE, 0x02, 0x02);
@@ -378,53 +390,33 @@ void timer3A_handler(void)
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_3,5000);
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,0);
 
-
-/*
-    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
-    //GPIOPinWrite(GPIO_PORTG_BASE, 0x01, 0x00);
-    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,5000);
     
-    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_5,5000);
-    //GPIOPinWrite(GPIO_PORTG_BASE, 0x01, 0x00);
-    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_6,0);
-    
- */   
-    /*
-    GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x02);
-
-    GPIOPinWrite(GPIO_PORTH_BASE, 0x02, 0x02);
+    */   
 
 
-    PWMPulseWidthSet(PWM1_BASE,PWM_OUT_1,100);
-    //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
-    GPIOPinWrite(GPIO_PORTF_BASE, 0x04, 0x0);
-
-
-   if (flagmainMotor1==1){
+    if (flagmainMotor1==1){
         if(vel[1]<0){
             GPIOPinWrite(GPIO_PORTH_BASE, 0x02, 0x02);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_1,100);
-            //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
-            GPIOPinWrite(GPIO_PORTF_BASE, 0x04, 0x0);
+
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_1,interpolar(vel[1]*-1,0,100,10000,1));
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
         }
         else{
-            GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x02);
             GPIOPinWrite(GPIO_PORTH_BASE, 0x02, 0x02);
-            //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_1,0);
-            GPIOPinWrite(GPIO_PORTF_BASE, 0x02, 0x0);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,100);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_1,0);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,interpolar(vel[1],0,100,10000,1));
         }
 
 
         if(vel[0]<0){
             GPIOPinWrite(GPIO_PORTH_BASE, 0x01, 0x01);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_3,vel[0]*-1);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_3,interpolar(vel[0]*-1,0,100,10000,1));
             PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,0);
         }
         else{
             GPIOPinWrite(GPIO_PORTH_BASE, 0x01, 0x01);
             PWMPulseWidthSet(PWM0_BASE,PWM_OUT_3,0);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[0]);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,interpolar(vel[0],0,100,10000,1));
         }
 
 
@@ -440,6 +432,6 @@ void timer3A_handler(void)
         }
    }
    
-   */
+   
    
 }
