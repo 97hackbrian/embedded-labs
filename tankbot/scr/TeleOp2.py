@@ -1,6 +1,6 @@
 from time import sleep
 import sys
-sys.path.append('/root/Desktop/embedded-labs/tankbot')
+sys.path.append('/home/ubuntu/Desktop/embedded-labs/tankbot')
 from libs.tiva import *
 from pynput.keyboard import Key, Listener
 
@@ -10,12 +10,12 @@ right_velocity = 0
 
 # Define two velocity options
 velocities = {
-    '1': 50,
-    '2': 100
+    '1': 30,
+    '2': 35
 }
 
-# Current velocity option
-current_velocity = 50  # Default to 50
+# Current velocity option>
+current_velocity = 30  # Default to 50
 
 # Function to update motor velocities and LED control
 def update_motors_and_leds():

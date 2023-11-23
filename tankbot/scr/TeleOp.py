@@ -1,6 +1,6 @@
 from time import sleep
 import sys
-sys.path.append('/root/Desktop/embedded-labs/tankbot')
+sys.path.append('/home/ubuntu/Desktop/embedded-labs/tankbot')
 from libs.tiva import *
 from pynput.keyboard import Key, Listener
 
@@ -17,22 +17,22 @@ def update_motors_and_leds():
 def on_key_press(key):
     global left_velocity, right_velocity
     if key == Key.up:
-        left_velocity = 70
-        right_velocity = 70
+        left_velocity = 30
+        right_velocity = 30
     elif key == Key.down:
-        left_velocity = -65
-        right_velocity = -65
+        left_velocity = -30
+        right_velocity = -30
     elif key == Key.left:
-        left_velocity = -75
-        right_velocity = 75
+        left_velocity = -30
+        right_velocity = 30
     elif key == Key.right:
-        left_velocity = 70
-        right_velocity = -70
+        left_velocity = 30
+        right_velocity = -30
     update_motors_and_leds()
 
 # Function to handle key releases
 def on_key_release(key):
-    sleep(0.7)
+    motors.stop()
     global left_velocity, right_velocity
     if key in (Key.up, Key.down, Key.left, Key.right):
         left_velocity = 0
