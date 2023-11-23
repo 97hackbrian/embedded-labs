@@ -12,8 +12,12 @@ if __name__ == "__main__":
     Leds=LedControl(serial_instance=tiva1)
     Leds.init_system(cam=0)##reparar cam=1
     mosfets.activate_mosfets(0,0,0,0,1,0)
-    sleep(1)
-    mosfets(0,0,0,0,0,0)
+    sleep(0.5)
+    mosfets.activate_mosfets(0,0,0,0,0,0)
+    sleep(0.5)
+    mosfets.activate_mosfets(0,0,0,0,1,0)
+    sleep(0.5)
+    mosfets.activate_mosfets(0,0,0,0,0,0)
     sleep(5)
     """
     motors.stop()
