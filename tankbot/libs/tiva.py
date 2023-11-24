@@ -74,7 +74,7 @@ class Mosfets:
             raise ValueError(f"La cantidad de estados debe ser exactamente {self.num_mosfets}")
 
         # Verifica si los valores son 0 o 1
-        if not all(val in (0, 1) for val in states):
+        if not all(val in (0, 1,"x") for val in states):
             raise ValueError("Los valores deben ser 0 o 1")
 
         command = ",".join(map(str, ["mosfet"] + list(states)))
@@ -86,7 +86,4 @@ class Gripper:
 
     def move(self, velocity):
         # Verifica si la velocidad está en el rango válido (0-100)
-        if not 0 <= velocity <= 100:
-            raise ValueError("La velocidad debe estar en el rango de 0 a 100")
-        
         self.ser.send_data(f"gripper,{velocity}")
