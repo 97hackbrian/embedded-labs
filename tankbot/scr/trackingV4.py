@@ -12,7 +12,7 @@ Leds = LedControl(serial_instance=tiva1)
 Leds.init_system(cam=0)  # Repair cam=1
 
 pid=[0,0,0]
-k=[0.7,0,0.1]
+k=[0.000001,0.005,0]
 errorAnt=0
 setpoint=640/2
 # Create tracker object
@@ -28,16 +28,15 @@ while True:
         break
 
     frame_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
     # Define lower and upper bounds for the colors you want to detect
     lower_blue = np.array([0, 0, 0])
     upper_blue = np.array([0, 0, 0])
     lower_green = np.array([0, 0, 0])
     upper_green = np.array([0, 0, 0])
-    lower_red1 = np.array([0, 50, 50])
-    upper_red1 = np.array([10, 150, 255])
-    lower_red2 = np.array([160, 50, 50])
-    upper_red2 = np.array([180, 150, 255])
+    lower_red1 = np.array([150, 50, 150])
+    upper_red1 = np.array([255, 255, 255])
+    lower_red2 = np.array([0, 0, 0])###
+    upper_red2 = np.array([0, 0, 0])
 
     # Create masks for the colors
     mask_blue = cv2.inRange(frame_hsv, lower_blue, upper_blue)
@@ -65,13 +64,13 @@ while True:
             pid[2]=(error-errorAnt)*k[2]
 
             # Interpolate PID[0] from 60 to 100
-            interpolated_pid = min(100, max(60, 60 + (sum(pid) + 100) / 2.0))
+            interpolated_pid = min(80, max(50, 50 + (sum(pid) + 80) / 2.0))
             print("Interpolated PID:", interpolated_pid)
 
             # Control the motors with the interpolated PID value
-            if center_x > 420:
+            if center_x > 430:
                 motors.move(int(interpolated_pid), -int(interpolated_pid))
-            elif center_x < 210:
+            elif center_x < 220:
                 motors.move(-int(interpolated_pid), int(interpolated_pid))
             else:
                 motors.stop()

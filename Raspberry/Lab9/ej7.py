@@ -73,16 +73,16 @@ while True:
 
                     if center_x > 420:
                         print("derecha")
-                        motors.move(70, -70)
+                        motors.move(64, -64)
                     elif center_x < 210:
                         print("izquierda")
-                        motors.move(-84, 84)
+                        motors.move(-64, 64)
                     else:
                         print("centro")
                         motors.stop()
     else:
         print("AQUI!!!!!!!!!!")
-        motors.move(-75, 75)
+        motors.move(-65, 65)
 
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)

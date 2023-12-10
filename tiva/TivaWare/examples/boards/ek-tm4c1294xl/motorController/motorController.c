@@ -155,12 +155,12 @@ int main(void)
             if (token != NULL)
             {
                 //UARTprintf(token);
-                vel[0] = atoi(token);
+                vel[1] = atoi(token);
                 token = strtok(NULL, ",");
                 if (token != NULL)
                 {
                     //UARTprintf(token);
-                    vel[1] = atoi(token);
+                    vel[0] = atoi(token);
                 }
                 flagMotor = 1;
                 //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
@@ -229,11 +229,11 @@ void timer0A_handler(void)
    TimerIntClear(TIMER0_BASE, TIMER_A);
    if (flagMotor==1){
         if(vel[1]<0){
-            GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x40);
+            GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x80);
             PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[1]*-1);
         }
         else{
-            GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x80);
+            GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x40);
             PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[1]);
         }
 
