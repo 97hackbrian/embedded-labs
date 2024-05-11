@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 
 # Cargar la imagen
-color = cv2.imread('/home/hackbrian/Documentos/gitProyects/embedded-labs/Raspberry/Lab9/recursos_lab_9/monedas_2.jpg')
-img = cv2.imread('/home/hackbrian/Documentos/gitProyects/embedded-labs/Raspberry/Lab9/recursos_lab_9/monedas_2.jpg', cv2.IMREAD_GRAYSCALE)
+color = cv2.imread('Raspberry/Lab9/recursos_lab_9/monedas_2.jpg')
+img = cv2.imread('Raspberry/Lab9/recursos_lab_9/monedas_2.jpg', cv2.IMREAD_GRAYSCALE)
 img=cv2.resize(img,(600,400))
 color=cv2.resize(color,(600,400))
 # Aplicar la adaptación del umbral gaussiano

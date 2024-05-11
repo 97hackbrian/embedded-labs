@@ -20526,7 +20526,7 @@ Source: www.kingbright.com</description>
 <class number="3" name="VInbat" width="1.27" drill="0.4064">
 <clearance class="3" value="1.016"/>
 </class>
-<class number="4" name="5v3A" width="0.635" drill="0.2032">
+<class number="4" name="5v3A" width="1.27" drill="0.508">
 <clearance class="4" value="1.016"/>
 </class>
 <class number="5" name="outsVoltaje" width="0.635" drill="0.2032">

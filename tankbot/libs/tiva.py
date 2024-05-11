@@ -62,3 +62,28 @@ class LedControl:
             except:
                 print("Problem to connect to Serial")
             sleep(0.35)
+
+class Mosfets:
+    def __init__(self, serial_instance) -> None:
+        self.ser = serial_instance
+        self.num_mosfets = 6  # Número fijo de MOSFETs
+
+    def activate_mosfets(self, *states):
+        # Verifica si la cantidad de estados es igual al número de MOSFETs
+        if len(states) != self.num_mosfets:
+            raise ValueError(f"La cantidad de estados debe ser exactamente {self.num_mosfets}")
+
+        # Verifica si los valores son 0 o 1
+        if not all(val in (0, 1,"x") for val in states):
+            raise ValueError("Los valores deben ser 0 o 1")
+
+        command = ",".join(map(str, ["mosfet"] + list(states)))
+        self.ser.send_data(command)
+
+class Gripper:
+    def __init__(self, serial_instance) -> None:
+        self.ser = serial_instance
+
+    def move(self, velocity):
+        # Verifica si la velocidad está en el rango válido (0-100)
+        self.ser.send_data(f"gripper,{velocity}")

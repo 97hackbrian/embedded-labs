@@ -20993,30 +20993,6 @@ Source: www.kingbright.com</description>
 <wire x1="-10.16" y1="-31.75" x2="-3.81" y2="-31.75" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="PL4" class="2">
-<segment>
-<pinref part="U$1" gate="G$1" pin="PL4"/>
-<wire x1="-10.16" y1="25.4" x2="-5.715" y2="25.4" width="0.1524" layer="91"/>
-<label x="-5.715" y="25.4" size="0.8128" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="U$2" gate="G$1" pin="PWMA"/>
-<junction x="121.92" y="-35.56"/>
-<label x="119.38" y="-35.56" size="0.8128" layer="95" rot="MR0" xref="yes"/>
-</segment>
-</net>
-<net name="PL5" class="2">
-<segment>
-<pinref part="U$1" gate="G$1" pin="PL5"/>
-<wire x1="-10.16" y1="22.86" x2="-5.715" y2="22.86" width="0.1524" layer="91"/>
-<label x="-5.715" y="22.86" size="0.8128" layer="95" xref="yes"/>
-</segment>
-<segment>
-<pinref part="U$2" gate="G$1" pin="PWMB"/>
-<junction x="121.92" y="-50.8"/>
-<label x="119.38" y="-50.8" size="0.8128" layer="95" rot="MR0" xref="yes"/>
-</segment>
-</net>
 <net name="N$10" class="0">
 <segment>
 <pinref part="U$2" gate="G$1" pin="A01"/>
@@ -21125,6 +21101,30 @@ Source: www.kingbright.com</description>
 <pinref part="U$1" gate="G$1" pin="PM6"/>
 <wire x1="-53.34" y1="-36.195" x2="-44.45" y2="-36.195" width="0.1524" layer="91"/>
 <wire x1="-44.45" y1="-36.195" x2="-44.45" y2="-36.83" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="PF2" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PF2"/>
+<wire x1="-10.16" y1="33.02" x2="-5.08" y2="33.02" width="0.1524" layer="91"/>
+<label x="-5.08" y="33.02" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="PWMA"/>
+<junction x="121.92" y="-35.56"/>
+<label x="119.38" y="-35.56" size="0.8128" layer="95" rot="MR0" xref="yes"/>
+</segment>
+</net>
+<net name="PF3" class="0">
+<segment>
+<pinref part="U$1" gate="G$1" pin="PF3"/>
+<wire x1="-10.16" y1="30.48" x2="-5.08" y2="30.48" width="0.1524" layer="91"/>
+<label x="-5.08" y="30.48" size="1.27" layer="95" xref="yes"/>
+</segment>
+<segment>
+<pinref part="U$2" gate="G$1" pin="PWMB"/>
+<junction x="121.92" y="-50.8"/>
+<label x="119.38" y="-50.8" size="0.8128" layer="95" rot="MR0" xref="yes"/>
 </segment>
 </net>
 </nets>

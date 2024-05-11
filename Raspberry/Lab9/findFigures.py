@@ -40,7 +40,7 @@ def detect(contour):
 
     return shape,len(approximate),aspect_ratio
 
-imgcolor=cv2.imread("/root/Desktop/embedded-labs/Raspberry/Lab9/recursos_lab_9/figuras.png",1)
+imgcolor=cv2.imread("Raspberry/Lab9/recursos_lab_9/figuras.png",1)
 img=cv2.cvtColor(imgcolor,cv2.COLOR_BGR2GRAY)
 contoursCanny=cv2.Canny(img,0,100)
 contours, _ = cv2.findContours(contoursCanny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -56,7 +56,7 @@ for contour in contours:
     
     cv2.putText(image_rgb, str(shape)+str(con), tuple(contour[0][0]+40), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 0, 0), 3)
     cv2.putText(image_rgb, str(count), tuple(contour[0][0]+90), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 0, 0), 3)
-    cv2.putText(image_rgb, str(ratio), tuple(contour[0][0]+130), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 0, 0), 3)
+    #cv2.putText(image_rgb, str(ratio), tuple(contour[0][0]+130), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (255, 0, 0), 3)
 cv2.imshow("figuras",image_rgb)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

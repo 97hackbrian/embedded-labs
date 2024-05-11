@@ -7,30 +7,31 @@ from pynput.keyboard import Key, Listener
 # Define the initial velocities
 left_velocity = 0
 right_velocity = 0
-
+vel=0
 # Define two velocity options
 velocities = {
-    '1': 50,
-    '2': 100
+    '1': 130,
+    '2': 150
 }
 
-# Current velocity option
-current_velocity = 50  # Default to 50
+# Current velocity option>
+current_velocity = 100  # Default to 50
 
 # Function to update motor velocities and LED control
 def update_motors_and_leds():
     motors.move(left_velocity, right_velocity)
+    caja.move(vel)
     #Leds.write(0, 1, 0, 1)  # You can change the LED pattern here
 
 # Function to handle key presses
 def on_key_press(key):
-    global left_velocity, right_velocity, current_velocity
+    global left_velocity, right_velocity, current_velocity, vel
     if key == Key.up:
         left_velocity = current_velocity
         right_velocity = current_velocity
     elif key == Key.down:
-        left_velocity = -current_velocity
-        right_velocity = -current_velocity
+        left_velocity = -current_velocity-40
+        right_velocity = -current_velocity-40
     elif key == Key.left:
         left_velocity = -current_velocity
         right_velocity = current_velocity
@@ -44,6 +45,11 @@ def on_key_press(key):
         left_velocity = 0
         right_velocity = 0
         motors.stop()
+        caja.move(0)
+    elif key == Key.shift:
+        vel = -80
+    elif key == Key.ctrl:
+        vel = 100
         
     elif key.char in velocities:  # Check if a number key (1 or 2) is pressed
         if(key.char=="1"):
@@ -56,16 +62,19 @@ def on_key_press(key):
 
 # Function to handle key releases
 def on_key_release(key):
-    global left_velocity, right_velocity
+    global left_velocity, right_velocity,vel
     if key in (Key.up, Key.down, Key.left, Key.right):
         left_velocity = 0
         right_velocity = 0
         motors.stop()
+        vel=0
+        caja.move(0)
         #Leds.write(0, 0, 0, 0)
 
 if __name__ == "__main__":
     tiva1 = InitSerial(baud=9600)
     motors = Motors(serial_instance=tiva1)
+    caja=Gripper(serial_instance=tiva1)
     Leds = LedControl(serial_instance=tiva1)
     Leds.init_system(cam=0)  # Repair cam=1
 

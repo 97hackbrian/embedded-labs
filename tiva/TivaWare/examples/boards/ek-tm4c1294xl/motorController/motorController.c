@@ -43,9 +43,11 @@ uint32_t FS = 120000000/100; //frecuencia del timer
 uint32_t FS2 = 120000000/100; //frecuencia del timer
 int flagMotor=0;
 int flagLeds=0;
-char data[15];
+char data[25];
 char comand[7];
 int vel[2];
+int ser[2];
+int vel2[2];
 int leds[4];
 
 int main(void)
@@ -61,6 +63,7 @@ int main(void)
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOJ);//BOTONES
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOK);//
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);//
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOL);//
     
     SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM0);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM1);//PROBAR
@@ -103,7 +106,7 @@ int main(void)
     
 
     GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE, 0x03);
-    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, 0x11);
+    GPIOPinTypeGPIOOutput(GPIO_PORTL_BASE, 0xC);// PL2,PL3
 
     //GPIOPinTypeGPIOOutput(GPIO_PORTG_BASE, 0x01);//PG0 PWMB
     GPIOPinTypeGPIOOutput(GPIO_PORTK_BASE, 0xF0);//PK4,PK5,PK6,PK7
@@ -119,33 +122,49 @@ int main(void)
 
 
     //pwm
+    GPIOPinConfigure(GPIO_PF1_M0PWM1);//
     GPIOPinConfigure(GPIO_PF2_M0PWM2);
     GPIOPinConfigure(GPIO_PG0_M0PWM4);
-
+    GPIOPinConfigure(GPIO_PG1_M0PWM5);
+    width=255;
+    GPIOPinTypePWM(GPIO_PORTF_BASE,GPIO_PIN_1);//
     GPIOPinTypePWM(GPIO_PORTF_BASE,GPIO_PIN_2);
     GPIOPinTypePWM(GPIO_PORTG_BASE,GPIO_PIN_0);
+    GPIOPinTypePWM(GPIO_PORTG_BASE,GPIO_PIN_1);
 
+    PWMGenConfigure(PWM0_BASE,PWM_GEN_0,PWM_GEN_MODE_DOWN);
     PWMGenConfigure(PWM0_BASE,PWM_GEN_1,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
+    //PWMGenConfigure(PWM1_BASE,PWM_GEN_1,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
     PWMGenConfigure(PWM0_BASE,PWM_GEN_2,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
-    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_1,100);
-    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_2,100);
+    PWMGenConfigure(PWM0_BASE,PWM_GEN_3,PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_0,100);
+    //PWMGenPeriodSet(PWM1_BASE,PWM_GEN_1,width);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_1,width);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_2,width);
+    PWMGenPeriodSet(PWM0_BASE,PWM_GEN_3,width);
 
-    width=100;
+    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_1,1);
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
     PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,width);
+    PWMPulseWidthSet(PWM0_BASE,PWM_OUT_5,width);
 
+    PWMGenEnable(PWM0_BASE,PWM_GEN_0);
     PWMGenEnable(PWM0_BASE,PWM_GEN_1);
-    PWMGenEnable(PWM0_BASE,PWM_GEN_2);    
+    //PWMGenEnable(PWM1_BASE,PWM_GEN_1);
+    PWMGenEnable(PWM0_BASE,PWM_GEN_2);
+    PWMGenEnable(PWM0_BASE,PWM_GEN_3);       
     
+    PWMOutputState(PWM0_BASE,(PWM_OUT_1_BIT),true);
     PWMOutputState(PWM0_BASE,(PWM_OUT_2_BIT),true);
     PWMOutputState(PWM0_BASE,(PWM_OUT_4_BIT),true);
+    PWMOutputState(PWM0_BASE,(PWM_OUT_5_BIT),true);
 
 
 
 
     while(1){
         //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x03);
-        UARTgets(data,15);
+        UARTgets(data,25);
         strcpy(comand, strtok(data, ","));
         //UARTprintf(comand);
         
@@ -155,12 +174,12 @@ int main(void)
             if (token != NULL)
             {
                 //UARTprintf(token);
-                vel[1] = atoi(token);
+                vel[0] = atoi(token);
                 token = strtok(NULL, ",");
                 if (token != NULL)
                 {
                     //UARTprintf(token);
-                    vel[0] = atoi(token);
+                    vel[1] = atoi(token);
                 }
                 flagMotor = 1;
                 //GPIOPinWrite(GPIO_PORTN_BASE, 0x03, 0x01);
@@ -220,54 +239,81 @@ int main(void)
         
         GPIOPinWrite(GPIO_PORTB_BASE, 0x0C, 0x04);
         SysCtlDelay(15000000);*/
-        
+        if(strcmp(comand, "gripper")==0){
+            char *token = strtok(NULL, ",");
+            if (token != NULL)
+            {
+                //UARTprintf(token);
+                vel2[0] = atoi(token);
+                token = strtok(NULL, ",");
+                if (token != NULL)
+                {
+                 
+                }
+     
+            }
+            
+            
+
+        }
+      
     }
 }
 
 void timer0A_handler(void)
 {
    TimerIntClear(TIMER0_BASE, TIMER_A);
-   if (flagMotor==1){
-        if(vel[1]<0){
+
+        if(vel[0]<0){
             GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x80);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[1]*-1);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[0]*-1);
         }
         else{
             GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x40);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[1]);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[0]);
         }
 
 
-        if(vel[0]<0){
+        if(vel[1]<0){
             GPIOPinWrite(GPIO_PORTK_BASE, 0x30, 0x10);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,vel[0]*-1);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,vel[1]*-1);
         }
         else{
             GPIOPinWrite(GPIO_PORTK_BASE, 0x30, 0x20);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,vel[0]);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,vel[1]);
         }
 
 
-        if(vel[0]==0 || vel[1]==0){
-            GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0x00);
-            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
+        if(vel[0]==0){
+            GPIOPinWrite(GPIO_PORTK_BASE, 0xC0, 0x0);
             PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,0);
         }
-    
+        if(vel[1]==0){
+            GPIOPinWrite(GPIO_PORTK_BASE, 0x30, 0x0);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,0);
+        }
 
+        if(vel2[0]<0){
+            GPIOPinWrite(GPIO_PORTL_BASE, 0xC, 0x04);
+            PWMPulseWidthSet(PWM0_BASE,PWM_OUT_5,vel2[0]*-1);
+        }
+        else{
+        GPIOPinWrite(GPIO_PORTL_BASE, 0xC, 0x08);
+        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_5,vel2[0]);
+    }
+    if(vel2[0]==0){
+        GPIOPinWrite(GPIO_PORTL_BASE, 0xC, 0x0);
+        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_5,0);
+    }
+
+    
+    //PWMGenPeriodSet(PWM0_BASE,PWM_GEN_0,ser[0]);
+    //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_1,ser[0]);
 
         
         //GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0xA0);
         //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,vel[0]);
         //PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,vel[1]);
-   }
-   else if(flagMotor==0){
-        width=0;
-        GPIOPinWrite(GPIO_PORTK_BASE, 0xF0, 0x00);//PF7 y PF5(adelante)0xA0 //0x50 PF4 y PF6(atras)0x50
-        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_2,width);
-        PWMPulseWidthSet(PWM0_BASE,PWM_OUT_4,width);
-   }
-   
 }
 
 
@@ -277,29 +323,6 @@ void timer0A_handler(void)
 
 void timer1A_handler(void){ 
    TimerIntClear(TIMER1_BASE, TIMER_A);
-   if (leds[0]==1){
-    GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x02);
-   }
-   else{
-    GPIOPinWrite(GPIO_PORTN_BASE, 0x02, 0x00);
-   }
-   if (leds[1]==1){
-    GPIOPinWrite(GPIO_PORTN_BASE, 0x01, 0x01);
-   }
-   else{
-    GPIOPinWrite(GPIO_PORTN_BASE, 0x01, 0x00);
-   }
-   if (leds[2]==1){
-    GPIOPinWrite(GPIO_PORTF_BASE, 0x10, 0x10);
-   }
-   else{
-    GPIOPinWrite(GPIO_PORTF_BASE, 0x10, 0x00);
-   }
-   if (leds[3]==1){
-    GPIOPinWrite(GPIO_PORTF_BASE, 0x01, 0x01);
-   }
-   else{
-    GPIOPinWrite(GPIO_PORTF_BASE, 0x01, 0x00);
-   }
+
    
 }
